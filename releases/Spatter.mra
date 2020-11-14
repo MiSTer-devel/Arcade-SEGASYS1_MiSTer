@@ -14,6 +14,7 @@
 		<dip bits="12,13" name="Extend" ids="None,100k only,50k 200k,40k 120k 480k"/>
 		<dip bits="14" name="Reset Timer and Objects" ids="Yes,No"/>
 	</switches>
+	<buttons names="Jump,-,-,-,-,Start 1P,Start 2P,Coin" default="A,Start,Select,R"/>
 	<rom index="1">
 		<part>04</part>
 	</rom>

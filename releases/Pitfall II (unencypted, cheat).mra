@@ -1,0 +1,48 @@
+<misterromdescription>
+	<name>Pitfall II</name>
+	<mameversion>0216</mameversion>
+	<setname>pitfall2u</setname>
+	<mratimestamp>202001100000</mratimestamp>
+	<year>1985</year>
+	<manufacturer>Sega</manufacturer>
+	<category>Maze / Extra</category>
+	<rbf>segasys1</rbf>
+    <switches default="FF,DE">
+		<dip bits="9,10"  name="Lives" ids="Infinite,5,4,3"/>
+		<dip bits="11,12" name="Starting Stage" ids="4,3,2,1"/>
+		<dip bits="13"    name="Allow Continue" ids="Yes,No"/>
+		<dip bits="14"    name="Time" ids="2 Minutes,3 Minutes"/>
+	</switches>
+	<buttons names="Jump,-,-,-,-,Start 1P,Start 2P,Coin" default="A,Start,Select,R"/>
+	<rom index="1">
+		<part>04</part>
+	</rom>
+	<rom index="0" zip="pitfall2.zip" md5="5d980b519dcd328d21dc2c6ff941f0a0" type="merged|nonmerged|split">
+		<part name="pitfall2u/epr-6623.116"/>
+		<part name="pitfall2u/epr-6624a.109"/>
+		<part name="pitfall2u/epr-6625.96"/>
+		<part name="epr-6462.120"/>
+		<part name="epr-6462.120"/>
+		<part name="epr-6454a.117"/>
+		<part name="epr-6455.05"/>
+		<part name="epr-6454a.117"/>
+		<part name="epr-6455.05"/>
+		<part name="epr-6474a.62"/>
+		<part name="epr-6472a.64"/>
+		<part name="epr-6470a.66"/>
+		<part name="epr-6473a.61"/>
+		<part name="epr-6471a.63"/>
+		<part name="epr-6469a.65"/>
+		<part name="pr-5317.76"/>
+		<part>
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+		</part>
+	</rom>
+</misterromdescription>

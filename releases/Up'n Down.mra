@@ -12,6 +12,7 @@
 		<dip bits="11,13"  name="Binus at" ids="Never,70k,60k,50k,40k,30k,20k,10k"/>
 		<dip bits="14,15" name="Difficulty" ids="Hardest,Hard,Medium,Easy"/>
 	</switches>
+	<buttons names="-,Jump,-,-,-,Start 1P,Start 2P,Coin" default="A,Start,Select,R"/>
 	<rom index="1">
 		<part>06</part>
 	</rom>

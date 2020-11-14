@@ -7,11 +7,12 @@
 	<manufacturer>Sega</manufacturer>
 	<category>Shmup</category>
 	<rbf>segasys1</rbf>
-    <switches default="FF,FF">
+    <switches default="FF,FE">
 		<dip bits="9,10"   name="Lives" ids="Free Play,5,4,3"/> 
 		<dip bits="11,13"  name="Binus at" ids="Never,90k,80k,70k,60k,50k,40k,30k"/>
 		<dip bits="14"     name="Difficulty" ids="Hard,Easy"/>
 	</switches>
+	<buttons names="-,Fire,-,-,-,Start 1P,Start 2P,Coin" default="A,Start,Select,R"/>
 	<rom index="1">
 		<part>04</part>
 	</rom>

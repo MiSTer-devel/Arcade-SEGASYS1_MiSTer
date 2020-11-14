@@ -124,12 +124,10 @@ localparam CONF_STR = {
 	"OTV,Analog Video V-Pos,0,1,2,3,4,5,6,7;",
 	"-;",
 	"R0,Reset;",
-	"J1,Trig1,Trig2,Trig3,Start 1P,Start 2P,Coin;",
-	"jn,A,B,R,Start,Select,L;",
+	"J1,Trig1,Trig2,Trig3,Trig4,Trig5,Start 1P,Start 2P,Coin;",
+	"jn,A,B,X,,,Start,Select,R;",
 	"V,v",`BUILD_DATE
 };
-
-wire bCabinet = 1'b0;
 
 wire [4:0] HOFFS = status[28:24];
 wire [2:0] VOFFS = status[31:29];
@@ -161,10 +159,8 @@ wire  [7:0]	ioctl_index;
 wire [24:0] ioctl_addr;
 wire  [7:0] ioctl_dout;
 
-wire [10:0] ps2_key;
-wire [15:0] joystk1, joystk2;
-wire [15:0] joystick_analog_0;
-wire [15:0] joystick_analog_1;
+wire [15:0] joy1, joy2;
+wire [15:0] joy = joy1 | joy2;
 
 wire [21:0]	gamma_bus;
 
@@ -178,8 +174,8 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	.buttons(buttons),
 
 	.status(status),
-	.status_menumask({15'h0,direct_video}),
-	
+	.status_menumask(direct_video),
+
 	.forced_scandoubler(forced_scandoubler),
 	.gamma_bus(gamma_bus),
 	.direct_video(direct_video),
@@ -190,15 +186,11 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	.ioctl_dout(ioctl_dout),
 	.ioctl_index(ioctl_index),
 
-	.joystick_0(joystk1),
-	.joystick_1(joystk2),
-	.joystick_analog_0(joystick_analog_0),
-	.joystick_analog_1(joystick_analog_1),	
-
-	.ps2_key(ps2_key)
+	.joystick_0(joy1),
+	.joystick_1(joy2)
 );
 
-reg [7:0] SYSMODE;	// [0]=SYS1/SYS2,[1]=H/V,[2]=H256/H240
+reg [7:0] SYSMODE;	// [0]=SYS1/SYS2,[1]=H/V,[2]=H256/H240,[3]=water match control
 reg [7:0] DSW[8];
 always @(posedge clk_sys) begin
 	if (ioctl_wr) begin
@@ -207,87 +199,27 @@ always @(posedge clk_sys) begin
 	end
 end
 
-wire       pressed = ps2_key[9];
-wire [8:0] code    = ps2_key[8:0];
-always @(posedge clk_sys) begin
-	reg old_state;
-	old_state <= ps2_key[10];
-	
-	if(old_state != ps2_key[10]) begin
-		casex(code)
-			'hX75: btn_up          <= pressed; // up
-			'hX72: btn_down        <= pressed; // down
-			'hX6B: btn_left        <= pressed; // left
-			'hX74: btn_right       <= pressed; // right
-			'h029: btn_trig1       <= pressed; // space
-			'h014: btn_trig2       <= pressed; // ctrl
-			'h011: btn_trig3		  <= pressed; // alt
-			'h005: btn_one_player  <= pressed; // F1
-			'h006: btn_two_players <= pressed; // F2
+wire m_lup    = joy[3];
+wire m_ldown  = joy[2];
+wire m_lleft  = joy[1];
+wire m_lright = joy[0];
+wire m_rup    = joy[7];
+wire m_rdown  = joy[6];
+wire m_rleft  = joy[5];
+wire m_rright = joy[4];
+wire m_trig   = joy[8];
 
-			// JPAC/IPAC/MAME Style Codes
-			'h016: btn_start_1     <= pressed; // 1
-			'h01E: btn_start_2     <= pressed; // 2
-			'h02E: btn_coin_1      <= pressed; // 5
-			'h036: btn_coin_2      <= pressed; // 6
-			'h02D: btn_up_2        <= pressed; // R
-			'h02B: btn_down_2      <= pressed; // F
-			'h023: btn_left_2      <= pressed; // D
-			'h034: btn_right_2     <= pressed; // G
-			'h01C: btn_trig1_2     <= pressed; // A
-			'h01B: btn_trig2_2     <= pressed; // S
-			'h015: btn_trig3_2     <= pressed; // Q
-		endcase
-	end
-end
+wire m_up     = joy[3];
+wire m_down   = joy[2];
+wire m_left   = joy[1];
+wire m_right  = joy[0];
+wire m_trig_1 = joy[4];
+wire m_trig_2 = joy[5];
+wire m_trig_3 = joy[6];
 
-reg btn_up    = 0;
-reg btn_down  = 0;
-reg btn_right = 0;
-reg btn_left  = 0;
-reg btn_trig1 = 0;
-reg btn_trig2 = 0;
-reg btn_trig3 = 0;
-reg btn_one_player  = 0;
-reg btn_two_players = 0;
-
-reg btn_start_1 = 0;
-reg btn_start_2 = 0;
-reg btn_coin_1  = 0;
-reg btn_coin_2  = 0;
-reg btn_up_2    = 0;
-reg btn_down_2  = 0;
-reg btn_left_2  = 0;
-reg btn_right_2 = 0;
-reg btn_trig1_2 = 0;
-reg btn_trig2_2 = 0;
-reg btn_trig3_2 = 0;
-
-
-
-wire m_up2     = btn_up_2    | joystk2[3];
-wire m_down2   = btn_down_2  | joystk2[2];
-wire m_left2   = btn_left_2  | joystk2[1];
-wire m_right2  = btn_right_2 | joystk2[0];
-wire m_trig21  = btn_trig1_2 | joystk2[4];
-wire m_trig22  = btn_trig2_2 | joystk2[5];
-wire m_trig23  = btn_trig3_2 | joystk2[6];
-
-wire m_start1  = btn_one_player  | joystk1[7] | joystk2[7] | btn_start_1;
-wire m_start2  = btn_two_players | joystk1[8] | joystk2[8] | btn_start_2;
-
-wire m_up1     = btn_up      | joystk1[3] | (bCabinet ? 1'b0 : m_up2);
-wire m_down1   = btn_down    | joystk1[2] | (bCabinet ? 1'b0 : m_down2);
-wire m_left1   = btn_left    | joystk1[1] | (bCabinet ? 1'b0 : m_left2);
-wire m_right1  = btn_right   | joystk1[0] | (bCabinet ? 1'b0 : m_right2);
-wire m_trig11  = btn_trig1   | joystk1[4] | (bCabinet ? 1'b0 : m_trig21);
-wire m_trig12  = btn_trig2   | joystk1[5] | (bCabinet ? 1'b0 : m_trig22);
-wire m_trig13  = btn_trig3   | joystk1[6] | (bCabinet ? 1'b0 : m_trig23);
-
-wire m_coin1   = btn_one_player | btn_coin_1 | joystk1[9];
-wire m_coin2   = btn_two_players| btn_coin_2 | joystk2[9];
-wire m_coin    = (m_coin1|m_coin2);
-
+wire m_start1 = joy[9];
+wire m_start2 = joy[10];
+wire m_coin   = joy[11];
 
 ///////////////////////////////////////////////////
 
@@ -330,12 +262,22 @@ wire  [8:0] HPOS,VPOS;
 wire  [7:0] POUT;
 HVGEN hvgen
 (
-	.HPOS(HPOS),.VPOS(VPOS),.CLK(clk_48M), .PCLK_EN(PCLK_EN), .iRGB(POUT),
-	.oRGB({b,g,r}),.HBLK(hblank),.VBLK(vblank),.HSYN(hs),.VSYN(vs),
-	.H240(SYSMODE[2]),.HOFFS(HOFFS),.VOFFS(VOFFS)
+	.HPOS(HPOS),
+	.VPOS(VPOS),
+	.CLK(clk_48M),
+	.PCLK_EN(PCLK_EN),
+	.iRGB(POUT),
+	.oRGB({b,g,r}),
+	.HBLK(hblank),
+	.VBLK(vblank),
+	.HSYN(hs),
+	.VSYN(vs),
+	.H240(SYSMODE[2]),
+	.HOFFS(HOFFS),
+	.VOFFS(VOFFS)
 );
-assign ce_vid = PCLK_EN;
 
+assign ce_vid = PCLK_EN;
 
 wire [15:0] AOUT;
 assign AUDIO_L = AOUT;
@@ -347,22 +289,41 @@ assign AUDIO_S = 0; // unsigned PCM
 
 wire iRST = RESET | status[0] | buttons[1];
 
-wire [7:0] INP0 = ~{m_left1,m_right1,m_up1,m_down1,1'd0,m_trig12,m_trig11,m_trig13};
-wire [7:0] INP1 = ~{m_left2,m_right2,m_up2,m_down2,1'd0,m_trig22,m_trig21,m_trig23};
-wire [7:0] INP2 = ~{2'd0,m_start2,m_start1,3'd0, m_coin}; 
+wire [7:0] INP0, INP1, INP2;
+always_comb begin
+	if (SYSMODE[3]) begin
+		INP0 = ~{m_lleft, m_lright, m_lup, m_ldown, m_rleft, m_rright, m_rup, m_rdown};
+		INP1 = ~{m_lleft, m_lright, m_lup, m_ldown, m_rleft, m_rright, m_rup, m_rdown};
+		INP2 = ~{m_trig, m_trig, m_start2, m_start1, 3'b000, m_coin};
+	end
+	else begin
+		INP0 = ~{m_left, m_right, m_up, m_down,1'd0, m_trig_2, m_trig_1, m_trig_3};
+		INP1 = ~{m_left, m_right, m_up, m_down,1'd0, m_trig_2, m_trig_1, m_trig_3};
+		INP2 = ~{2'b00, m_start2, m_start1, 3'b000, m_coin}; 
+	end
+end
 
+SEGASYSTEM1 GameCore
+( 
+	.clk48M(clk_48M),
+	.reset(iRST),
 
-SEGASYSTEM1 GameCore ( 
-	.clk48M(clk_48M),.reset(iRST),
+	.INP0(INP0),
+	.INP1(INP1),
+	.INP2(INP2),
+	.DSW0(DSW[0]),
+	.DSW1(DSW[1]),
 
-	.INP0(INP0),.INP1(INP1),.INP2(INP2),
-	.DSW0(DSW[0]),.DSW1(DSW[1]),
-
-	.PH(HPOS),.PV(VPOS),.PCLK_EN(PCLK_EN),.POUT(POUT),
+	.PH(HPOS),
+	.PV(VPOS),
+	.PCLK_EN(PCLK_EN),
+	.POUT(POUT),
 	.SOUT(AOUT),
 
-	.ROMCL(clk_sys),.ROMAD(ioctl_addr),.ROMDT(ioctl_dout),.ROMEN(ioctl_wr & (ioctl_index==0))
+	.ROMCL(clk_sys),
+	.ROMAD(ioctl_addr),
+	.ROMDT(ioctl_dout),
+	.ROMEN(ioctl_wr & (ioctl_index==0))
 );
 
 endmodule
-

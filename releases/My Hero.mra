@@ -13,6 +13,7 @@
 		<dip bits="12,13" name="Extend" ids="90000,70000,50000,30000"/>
 		<dip bits="14" name="Difficulty" ids="Hard,Easy"/>
 	</switches>
+	<buttons names="Kick 1,Kick 2,-,-,-,Start 1P,Start 2P,Coin" default="A,B,Start,Select,R"/>
 	<rom index="1">
 		<part>00</part>
 	</rom>

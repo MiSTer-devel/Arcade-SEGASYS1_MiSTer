@@ -14,6 +14,7 @@
 		<dip bits="13" name="Allow Continue" ids="No,Yes"/>
 		<dip bits="14" name="Difficulty" ids="Hard,Easy"/>
 	</switches>
+	<buttons names="Fire 1,Fire 2,Hide,-,-,Start 1P,Start 2P,Coin" default="A,B,X,Start,Select,R"/>
 	<rom index="1">
 		<part>00</part>
 	</rom>

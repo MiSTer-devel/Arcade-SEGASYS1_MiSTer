@@ -12,6 +12,7 @@
 		<dip bits="10,11" name="Lives" ids="Free Play,5,4,3"/> 
 		<dip bits="12,13" name="Bonus at" ids="Never,50k 100k 200k,30k 80k 150k,20k 70k 120k"/> 
 	</switches>
+	<buttons names="Fire 1,Fire 2,-,-,-,Start 1P,Start 2P,Coin" default="A,B,Start,Select,R"/>
 	<rom index="1">
 		<part>06</part>
 	</rom>
