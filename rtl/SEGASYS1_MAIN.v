@@ -19,8 +19,6 @@ module SEGASYS1_MAIN
 	input				VBLK,
 	input				VIDCS,
 	input   [7:0]	VIDDO,
-
-	output			CPUCLn,
 	output [15:0]	CPUAD,
 	output  [7:0]	CPUDO,
 	output		  	CPUWR,
@@ -37,15 +35,13 @@ module SEGASYS1_MAIN
 );
 
 reg [3:0] clkdiv;
-always @(posedge CLK48M) clkdiv <= clkdiv+1;
-wire CLK3M = clkdiv[3];
+always @(posedge CLK48M) clkdiv <= clkdiv+1'd1;
+wire CLK3M_EN = clkdiv[2:0] == 0;
 
 wire			AXSCL   = CLK48M;
-wire			CPUCL   = CLK3M;
-assign 		CPUCLn  = ~CPUCL;
+wire      CPUCL_EN = CLK3M_EN;
 
 wire  [7:0]	CPUDI;
-wire			CPURD;
 
 wire	cpu_m1;
 wire	cpu_mreq, cpu_iorq;
@@ -53,7 +49,8 @@ wire	_cpu_rd, _cpu_wr;
 
 Z80IP maincpu(
 	.reset(RESET),
-	.clk(CPUCL),
+	.clk(CLK48M),
+	.clk_en(CPUCL_EN),
 	.adr(CPUAD),
 	.data_in(CPUDI),
 	.data_out(CPUDO),
@@ -67,8 +64,6 @@ Z80IP maincpu(
 );
 
 assign CPUWR = _cpu_wr & cpu_mreq;
-assign CPURD = _cpu_rd & cpu_mreq;
-
 
 // Input Port
 wire			cpu_cs_port;
@@ -88,14 +83,14 @@ wire  [7:0] rdt;
 
 SEGASYS1_PRGDEC decr(AXSCL,cpu_m1,CPUAD,cpu_rd_mrom0, rad,rdt, ROMCL,ROMAD,ROMDT,ROMEN);
 
-DLROM #(15,8) rom0(AXSCL,   rad,         rdt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU0);	// ($0000-$7FFF encrypted)
-DLROM #(14,8) rom1(CPUCLn,CPUAD,cpu_rd_mrom1, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU8);	// ($8000-$BFFF non-encrypted)
+DLROM #(15,8) rom0(CLK48M,  rad,         rdt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU0);	// ($0000-$7FFF encrypted)
+DLROM #(14,8) rom1(CLK48M,CPUAD,cpu_rd_mrom1, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU8);	// ($8000-$BFFF non-encrypted)
 
 
 // Work RAM
 wire [7:0]	cpu_rd_mram;
 wire			cpu_cs_mram = (CPUAD[15:12] == 4'b1100) & cpu_mreq;
-SRAM_4096 mainram(CPUCLn, CPUAD[11:0], cpu_rd_mram, cpu_cs_mram & CPUWR, CPUDO );
+SRAM_4096 mainram(CLK48M, CPUAD[11:0], cpu_rd_mram, cpu_cs_mram & CPUWR, CPUDO );
 
 
 // Video mode latch & Sound Request
@@ -105,7 +100,7 @@ wire cpu_cs_vidm = ((CPUAD[7:0] == 8'h15)|(CPUAD[7:0] == 8'h19)) & cpu_iorq;
 wire cpu_wr_sreq = cpu_cs_sreq & _cpu_wr;
 wire cpu_wr_vidm = cpu_cs_vidm & _cpu_wr;
 
-always @(posedge CPUCLn or posedge RESET) begin
+always @(posedge CLK48M or posedge RESET) begin
 	if (RESET) begin
 		VIDMD <= 0;
 		SNDRQ <= 0;

@@ -36,8 +36,8 @@ reg [15:0] cnt0,cnt2;
 always @(posedge ROMCL) begin
 	if (ROMEN) begin
 		if (ROMAD>=`DECTBLADRS) begin
-			cnt2 <= (ROMDT>=8'd24) ? 0 : (cnt2+1);
-			cnt0 <= (ROMDT!=8'd0 ) ? 0 : (cnt0+1);
+			cnt2 <= (ROMDT>=8'd24) ? 16'd0 : (cnt2+1'd1);
+			cnt0 <= (ROMDT!=8'd0 ) ? 16'd0 : (cnt0+1'd1);
 		end
 		else begin
 			cnt2 <= 0;

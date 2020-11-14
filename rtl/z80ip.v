@@ -4,6 +4,7 @@ module Z80IP
 (
 	input				reset,
 	input				clk,
+	input         clk_en,
 	output [15:0]	adr,
 	input   [7:0]	data_in,
 	output  [7:0]	data_out,
@@ -22,7 +23,8 @@ wire i_mreq, i_iorq, i_rd, i_wr, i_rfsh, i_m1;
 
 T80s cpu
 (
-	.CLK_n(~clk),
+	.CLK(clk),
+	.CEN(clk_en),
 	.RESET_n(~reset),
 	.INT_n(~intreq),
 	.NMI_n(~nmireq),

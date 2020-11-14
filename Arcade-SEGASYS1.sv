@@ -293,16 +293,16 @@ arcade_video #(256,224,8,1) videov
 	.rotate_ccw(1'b1)
 );
 
-wire			PCLK;
+wire			PCLK_EN;
 wire  [8:0] HPOS,VPOS;
 wire  [7:0] POUT;
 HVGEN hvgen
 (
-	.HPOS(HPOS),.VPOS(VPOS),.PCLK(PCLK),.iRGB(POUT),
+	.HPOS(HPOS),.VPOS(VPOS),.CLK(clk_48M), .PCLK_EN(PCLK_EN), .iRGB(POUT),
 	.oRGB({b,g,r}),.HBLK(hblank),.VBLK(vblank),.HSYN(hs),.VSYN(vs),
 	.H240(SYSMODE[2]),.HOFFS(HOFFS),.VOFFS(VOFFS)
 );
-assign ce_vid = PCLK;
+assign ce_vid = PCLK_EN;
 
 
 wire [15:0] AOUT;
@@ -326,7 +326,7 @@ SEGASYSTEM1 GameCore (
 	.INP0(INP0),.INP1(INP1),.INP2(INP2),
 	.DSW0(DSW[0]),.DSW1(DSW[1]),
 
-	.PH(HPOS),.PV(VPOS),.PCLK(PCLK),.POUT(POUT),
+	.PH(HPOS),.PV(VPOS),.PCLK_EN(PCLK_EN),.POUT(POUT),
 	.SOUT(AOUT),
 
 	.ROMCL(clk_sys),.ROMAD(ioctl_addr),.ROMDT(ioctl_dout),.ROMEN(ioctl_wr & (ioctl_index==0))

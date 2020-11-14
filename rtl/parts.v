@@ -210,25 +210,39 @@ endmodule
 //----------------------------------
 module LineBuf
 (
-	input				clkr,
-	input	  [9:0]	radr,
-	input				clre,
-	output [10:0]	rdat,
+	input	   			clkr,
+	input	     [9:0]	radr,
+	input	   			clre,
+	output reg [10:0]	rdat,
 	
-	input				clkw,
-	input	  [9:0]	wadr,
-	input	 [10:0]	wdat,
-	input				we,
-	output [10:0]	rdat1
+	input	    			clkw,
+	input	      [9:0]	wadr,
+	input	     [10:0]	wdat,
+	input	    			we,
+	output reg [10:0]	rdat1
 );
 
-DPRAM1024_11B core (
-	radr,wadr,
-	clkr,clkw,
-	16'h0,{5'h0,wdat},
-	clre,we,
-	rdat,rdat1
-);
+reg [10:0] ram[1024];
+
+always @(posedge clkr) begin
+	if(clre) begin
+		ram[radr] <= 0;
+		rdat <= 0;
+	end
+	else begin
+		rdat <= ram[radr];
+	end
+end
+
+always @(posedge clkw) begin
+	if(we) begin
+		ram[wadr] <= wdat;
+		rdat1 <= wdat;
+	end
+	else begin
+		rdat1 <= ram[wadr];
+	end
+end
 
 endmodule
 

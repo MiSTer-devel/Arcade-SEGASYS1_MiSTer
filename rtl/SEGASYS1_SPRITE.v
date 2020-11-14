@@ -2,8 +2,10 @@
 
 module SEGASYS1_SPRITE
 (
-	input					VCLKx4,
-	input					VCLK,
+	input          VCLKx8,
+	input          VCLKx4,
+	input          VCLKx4_EN,
+	input          VCLK_EN,
 
 	input  	[8:0]		PH,
 	input  	[8:0]		PV,
@@ -20,7 +22,7 @@ module SEGASYS1_SPRITE
 	output reg [10:0]	sprpx
 );
 
-wire [8:0] HPOS = PH+15;
+wire [8:0] HPOS = PH;
 wire [8:0] VPOS = PV;
 
 wire		  HB = HPOS[8];
@@ -41,7 +43,7 @@ reg  [8:0] xpos;
 reg  [2:0] bank;
 reg [15:0] stride;
 reg [15:0] srcadrs;
-reg  [1:0] waitcnt;
+reg  [3:0] waitcnt;
 reg  [7:0] rdat;
 reg [10:0] wdat;
 reg		  hflip;
@@ -60,13 +62,15 @@ wire side = VPOS[0];
 wire [10:0] opix;
 reg   [9:0] rad0,rad1=1;
 LineBuf lbuf(
-   VCLKx4, rad0, (rad0==rad1), opix, 
-	VCLKx4, {~side,xpos}, wdat, we & (wdat[3:0] != 4'h0), _prevpix
+	VCLKx8, rad0, (rad0==rad1), opix, 
+	VCLKx8, {~side,xpos}, wdat, we & (wdat[3:0] != 4'h0), _prevpix
 );
-always @(posedge VCLK) rad0 <= {side,HPOS};
-always @(negedge VCLK) begin
-	sprpx <= opix;
-	rad1  <= rad0;
+always @(posedge VCLKx8) begin
+	rad0 <= {side,HPOS};
+	if (VCLK_EN) begin
+		sprpx <= opix;
+		rad1  <= rad0;
+	end
 end
 
 assign sprad   = { spr_num, spr_ofs };
@@ -78,7 +82,7 @@ wire [9:0] sprcoll_adr = { spr_num[4:0], prevpix[8:4] };
 `define SPSTART	 0
 `define SPEND		31
 
-always @ ( negedge VCLKx4 ) begin
+always @ ( posedge VCLKx8 ) if (VCLKx4_EN) begin
 
 	// in H-Blank
 	if ( HB ) begin
@@ -91,7 +95,7 @@ always @ ( negedge VCLKx4 ) begin
 
 			// initialize
 			2'h0: begin
-				svpos   <= VPOS+1;
+				svpos   <= VPOS[7:0]+1'd1;
 				spr_num <= `SPSTART;
 				spr_ofs <= 0;
 				hits    <= 0;
@@ -103,12 +107,12 @@ always @ ( negedge VCLKx4 ) begin
 				if ( sprdt[7:0] != 8'hFF ) begin
 					if ( ( svpos >= sprdt[7:0] ) & ( svpos < sprdt[15:8] ) ) begin
 						hitsprnum[hits] <= spr_num;
-						hitsprvps[hits] <= (svpos-sprdt[7:0])+1;
-						hits <= hits+1;
+						hitsprvps[hits] <= (svpos-sprdt[7:0])+1'd1;
+						hits <= hits+1'd1;
 					end	
 				end
 				phaseHB <= ( spr_num == `SPEND ) ? 2'h2 : 2'h1;
-				spr_num <= spr_num+1;
+				spr_num <= spr_num+1'd1;
 			end
 
 			default:;
@@ -142,7 +146,7 @@ always @ ( negedge VCLKx4 ) begin
 			// get yofs/xpos/bank
 			2: begin
 				yofs <= hitsprvps[hitr];
-				xpos <= sprdt[8:1]+14;
+				xpos <= sprdt[8:1]+4'd14;
 				bank <= { sprdt[13], sprdt[14], sprdt[15] };
 				spr_ofs <= 2;
 				phaseHD <= 3;
@@ -159,24 +163,22 @@ always @ ( negedge VCLKx4 ) begin
 			4: begin
 				srcadrs <= srca;
 				hflip   <= srca[15];
-				waitcnt <= 3;
-				phaseHD <= 5;
+				waitcnt <= 8; // wait for sprite data after address setup
+				phaseHD <= 6;
 			end
 			
-			// wait chiprom setup
-			5: begin
-				waitcnt <= waitcnt-1;
-				phaseHD <= ( waitcnt == 0 ) ? 6 : 5;
-			end
-
 			// rendering to linebuf
 			6: begin
-				sprcoll <= 1'b0;
-				we      <= 1'b0;
-				rdat    <= sprchdt;
-				nowflip <= srcadrs[15];
-				srcadrs <= hflip ? (srcadrs-1) : (srcadrs+1);
-				phaseHD <= 7;
+				if (waitcnt == 0) begin
+					sprcoll <= 1'b0;
+					we      <= 1'b0;
+					rdat    <= sprchdt;
+					nowflip <= srcadrs[15];
+					srcadrs <= hflip ? (srcadrs-1'd1) : (srcadrs+1'd1);
+					if ((hflip && !srcadrs[0]) || (!hflip && srcadrs[0])) waitcnt <= 6; // assume 16 bit words are cached
+					phaseHD <= 7;
+				end else
+					waitcnt <= waitcnt - 1'd1;
 			end
 			7: begin
 				prevpix <= _prevpix;
@@ -199,7 +201,7 @@ always @ ( negedge VCLKx4 ) begin
 						sprcoll_ad <= sprcoll_adr;
 					end
 				end
-				xpos <= xpos+1;
+				xpos <= xpos+1'd1;
 				phaseHD <= 9;
 			end
 			9: begin
@@ -224,7 +226,8 @@ always @ ( negedge VCLKx4 ) begin
 						sprcoll_ad <= sprcoll_adr;
 					end
 				end
-				xpos <= xpos+1;
+				xpos <= xpos+1'd1;
+				//waitcnt <= 5;
 				phaseHD <= 6;
 			end
 
@@ -233,7 +236,7 @@ always @ ( negedge VCLKx4 ) begin
 				sprcoll <= 1'b0;
 				we <= 1'b0;
 				phaseHD <= ( hitr == (hits-1) ) ? 15 : 1;
-				hitr <= hitr+1;
+				hitr <= hitr+1'd1;
 			end
 			
 			default: begin

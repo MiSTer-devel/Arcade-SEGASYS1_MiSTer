@@ -1,33 +1,29 @@
 // Copyright (c) 2017,19 MiSTer-X
 
 `define EN_SCPU	(ROMAD[17:13]==5'b00_110)	// $0C000-$0DFFF
- 
 
- module SEGASYS1_SOUND
+module SEGASYS1_SOUND
 (
-   input				clk48M,
-	input				reset,
+	input         clk48M,
+	input         reset,
 
-   input   [7:0]	sndno,
-   input				sndstart,
+	input   [7:0] sndno,
+	input         sndstart,
 
-   output [15:0]	sndout,
-	
-	input				ROMCL,		// Downloaded ROM image
-	input   [24:0]	ROMAD,
-	input	  [7:0]	ROMDT,
-	input				ROMEN
+	output [15:0] sndout,
+
+	input         ROMCL,		// Downloaded ROM image
+	input  [24:0] ROMAD,
+	input   [7:0] ROMDT,
+	input         ROMEN
 );
 
 
 //----------------------------------
 //  ClockGen
 //----------------------------------
-wire clk8M,clk4M,clk2M;
-SndClkGen clkgen(clk48M,clk8M,clk4M,clk2M);
-
-wire cpuclkx2 = clk8M;
-wire cpu_clk  = clk4M;
+wire clk8M_en,clk4M_en,clk2M_en;
+SndClkGen clkgen(clk48M,clk8M_en,clk4M_en,clk2M_en);
 
 
 //----------------------------------
@@ -46,7 +42,8 @@ SndADec adec(
 );
 
 Z80IP cpu(
-	.clk(cpu_clk),
+	.clk(clk48M),
+	.clk_en(clk4M_en & cpuwait_n),
 	.reset(reset),
 	.adr(cpu_ad),
 	.data_in(cpu_di),
@@ -65,8 +62,8 @@ wire  [7:0]		rom_dt;		// ROM
 wire  [7:0]		ram_do;		// RAM
 wire  [7:0]		comlatch;	// Sound Command Latch
 
-DLROM #(13,8) subir( cpuclkx2, cpu_ad[12:0], rom_dt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_SCPU );
-SRAM_2048 wram( cpuclkx2, cpu_ad[10:0], ram_do, cpu_wr_ram, cpu_do );
+DLROM #(13,8) subir( clk48M, cpu_ad[12:0], rom_dt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_SCPU );
+SRAM_2048 wram( clk48M, cpu_ad[10:0], ram_do, cpu_wr_ram, cpu_do );
 
 dataselector3 scpudisel(
 	cpu_di,
@@ -78,7 +75,7 @@ dataselector3 scpudisel(
 
 
 SndPlayReq sndreq (
-	clk8M, reset,
+	clk48M, clk8M_en, reset,
 	sndno, sndstart,
 	cpu_irq, cpu_irqa,
 	cpu_nmi, cpu_nmia,
@@ -90,27 +87,29 @@ SndPlayReq sndreq (
 //  PSGs
 //----------------------------------
 wire [7:0] psg0out, psg1out;
+wire       psg0wait, psg1wait;
+wire       cpuwait_n = psg0wait & psg1wait;
 
-SN76496	psg0(
-	clk2M,
-	cpu_clk,
-	reset,
-	cpu_cs_psg0,
-	cpu_mw,
-	cpu_do,
-	4'b1111,
-	psg0out
+sn76489_top psg0(
+	.clock_i(clk48M),
+	.clock_en_i(clk2M_en),
+	.res_n_i(~reset),
+	.ce_n_i(~(cpu_cs_psg0 & cpu_mreq)),
+	.we_n_i(~cpu_wr),
+	.d_i(cpu_do),
+	.ready_o(psg0wait),
+	.aout_o(psg0out)
 );
 
-SN76496	psg1(
-	clk4M,
-	cpu_clk,
-	reset,
-	cpu_cs_psg1,
-	cpu_mw,
-	cpu_do,
-	4'b1111,
-	psg1out
+sn76489_top psg1(
+	.clock_i(clk48M),
+	.clock_en_i(clk4M_en),
+	.res_n_i(~reset),
+	.ce_n_i(~(cpu_cs_psg1 & cpu_mreq)),
+	.we_n_i(~cpu_wr),
+	.d_i(cpu_do),
+	.ready_o(psg1wait),
+	.aout_o(psg1out)
 );
 
 wire [8:0] psgout = psg0out + psg1out;
@@ -121,26 +120,21 @@ endmodule
 
 module SndClkGen
 (
-	input			clk48M,
-	output reg 	clk8M,
-	output		clk4M,
-	output		clk2M
+	input     clk48M,
+	output    clk8M_en,
+	output    clk4M_en,
+	output    clk2M_en
 );
 
-reg [1:0] count;
+reg [4:0] count;
 always @( posedge clk48M ) begin
-	if (count > 2'd2) begin
-		count <= count - 2'd2;
-      clk8M <= ~clk8M;
-   end
-   else count <= count + 2'd1;
+	count <= count + 1'd1;
+	if (count == 23) count <= 0;
 end
 
-reg [1:0] clkdiv;
-always @ ( posedge clk8M ) clkdiv <= clkdiv+1;
-
-assign clk4M = clkdiv[0];
-assign clk2M = clkdiv[1];
+assign clk2M_en = count == 0;
+assign clk4M_en = count == 0 || count == 12;
+assign clk8M_en = count == 0 || count == 6 || count == 12 || count == 18;
 
 endmodule
 
@@ -179,7 +173,8 @@ endmodule
 //----------------------------------
 module SndPlayReq
 (
-	input			clk8M,
+	input			clk,
+	input     clk8_en,
 	input			reset,
 
 	input	[7:0]	sndno,
@@ -197,7 +192,7 @@ module SndPlayReq
 reg [16:0]	timercnt;
 reg			psndstart;
 
-always @( posedge clk8M or posedge reset ) begin
+always @( posedge clk or posedge reset ) begin
 	if ( reset ) begin
 		cpu_nmi   <= 0;
 		cpu_irq   <= 0;
@@ -205,7 +200,7 @@ always @( posedge clk8M or posedge reset ) begin
 		timercnt  <= 0;
 		psndstart <= 0;
 	end
-	else begin
+	else if (clk8_en) begin
 		if ( cpu_irqa ) cpu_irq <= 1'b0;
 		if ( cpu_nmia ) cpu_nmi <= 1'b0;
 
@@ -218,7 +213,7 @@ always @( posedge clk8M or posedge reset ) begin
 		if ( timercnt == 33333 ) cpu_irq <= 1'b1;
 		if ( timercnt == 66666 ) cpu_irq <= 1'b1;
 
-		timercnt <= ( timercnt == 66666 ) ? 0 : (timercnt+1);	// 1/60sec
+		timercnt <= ( timercnt == 66666 ) ? 17'd0 : (timercnt+1'd1);	// 1/60sec
 	end
 end
 

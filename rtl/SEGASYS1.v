@@ -17,7 +17,7 @@ module SEGASYSTEM1
 	
 	input   [8:0]  PH,         // PIXEL H
 	input   [8:0]  PV,         // PIXEL V
-	output         PCLK,       // PIXEL CLOCK (to VGA encoder)
+	output        PCLK_EN,
 	output  [7:0]	POUT, 	   // PIXEL OUT
 
 	output  [15:0] SOUT,			// Sound Out (PCM)
@@ -30,7 +30,6 @@ module SEGASYSTEM1
 );
 
 // CPU
-wire 			CPUCLn;
 wire [15:0] CPUAD;
 wire  [7:0] CPUDO,VIDDO,SNDNO,VIDMD;
 wire			CPUWR,VIDCS,VBLK;
@@ -41,7 +40,7 @@ SEGASYS1_MAIN Main (
 	.INP0(INP0),.INP1(INP1),.INP2(INP2),
 	.DSW0(DSW0),.DSW1(DSW1),
 	.CLK48M(clk48M),
-	.CPUCLn(CPUCLn),.CPUAD(CPUAD),.CPUDO(CPUDO),.CPUWR(CPUWR),
+	.CPUAD(CPUAD),.CPUDO(CPUDO),.CPUWR(CPUWR),
 	.VBLK(VBLK),.VIDCS(VIDCS),.VIDDO(VIDDO),
 	.SNDRQ(SNDRQ),.SNDNO(SNDNO),
 	.VIDMD(VIDMD),
@@ -54,14 +53,14 @@ wire [7:0] OPIX;
 SEGASYS1_VIDEO Video (
 	.RESET(reset),.VCLKx8(clk48M),
 	.PH(PH),.PV(PV),.VFLP(VIDMD[7]),
-	.VBLK(VBLK),.PCLK(PCLK),.RGB8(OPIX),.PALDSW(1'b0),
+	.VBLK(VBLK),.PCLK_EN(PCLK_EN),.RGB8(OPIX),.PALDSW(1'b0),
 
-	.cpu_cl(CPUCLn),.cpu_ad(CPUAD),.cpu_wr(CPUWR),.cpu_dw(CPUDO),
+	.cpu_ad(CPUAD),.cpu_wr(CPUWR),.cpu_dw(CPUDO),
 	.cpu_rd(VIDCS),.cpu_dr(VIDDO),
 
 	.ROMCL(ROMCL),.ROMAD(ROMAD),.ROMDT(ROMDT),.ROMEN(ROMEN)
 );
-assign POUT = VIDMD[4] ? 0 : OPIX;
+assign POUT = VIDMD[4] ? 8'd0 : OPIX;
 
 // Sound
 SEGASYS1_SOUND Sound(
