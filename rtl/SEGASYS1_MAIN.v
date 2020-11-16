@@ -2,6 +2,7 @@
 
 `define EN_MCPU0		(ROMAD[17:15]==3'b00_0 ) 
 `define EN_MCPU8		(ROMAD[17:14]==4'b00_10) 
+`define EN_MCPUD		(ROMAD[17:15]==4'b11_0 )
 
 module SEGASYS1_MAIN
 (
@@ -77,15 +78,19 @@ wire			cpu_cs_mrom1 = (CPUAD[15:14] == 2'b10) & cpu_mreq;
 
 wire [7:0]	cpu_rd_mrom0;
 wire [7:0]	cpu_rd_mrom1;
+wire [7:0]	cpu_rd_mromd;
 
 wire [14:0] rad;
 wire  [7:0] rdt;
 
 SEGASYS1_PRGDEC decr(AXSCL,cpu_m1,CPUAD,cpu_rd_mrom0, rad,rdt, ROMCL,ROMAD,ROMDT,ROMEN);
 
-DLROM #(15,8) rom0(CLK48M,  rad,         rdt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU0);	// ($0000-$7FFF encrypted)
-DLROM #(14,8) rom1(CLK48M,CPUAD,cpu_rd_mrom1, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU8);	// ($8000-$BFFF non-encrypted)
+DLROM #(15,8) rom0(CLK48M, nocrypt ? CPUAD : rad, rdt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU0);	// ($0000-$7FFF encrypted)
+DLROM #(14,8) rom1(CLK48M, CPUAD,        cpu_rd_mrom1, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPU8);	// ($8000-$BFFF non-encrypted)
+DLROM #(15,8) romd(CLK48M, CPUAD,        cpu_rd_mromd, ROMCL,ROMAD,ROMDT,ROMEN & `EN_MCPUD);	// ($0000-$7FFF non-encrypted data)
 
+reg nocrypt = 0;
+always @(posedge CLK48M) if(ROMEN & `EN_MCPUD) nocrypt <= 1;
 
 // Work RAM
 wire [7:0]	cpu_rd_mram;
@@ -120,7 +125,7 @@ dataselector6 mcpudisel(
 	cpu_cs_vidm,  VIDMD,
 	cpu_cs_port,  cpu_rd_port,
 	cpu_cs_mram,  cpu_rd_mram,
-	cpu_cs_mrom0, cpu_rd_mrom0,
+	cpu_cs_mrom0, ~nocrypt ? cpu_rd_mrom0 : cpu_m1 ? cpu_rd_mromd : rdt,
 	cpu_cs_mrom1, cpu_rd_mrom1,
 	8'hFF
 );
