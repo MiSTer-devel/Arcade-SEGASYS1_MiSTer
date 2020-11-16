@@ -162,6 +162,7 @@ wire  [7:0] ioctl_dout;
 wire [15:0] joy1, joy2;
 wire [15:0] joy = joy1 | joy2;
 wire  [8:0] spinner_0, spinner_1;
+wire [24:0] ps2_mouse;
 
 wire [21:0]	gamma_bus;
 
@@ -187,6 +188,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	.ioctl_dout(ioctl_dout),
 	.ioctl_index(ioctl_index),
 
+	.ps2_mouse(ps2_mouse),
 	.joystick_0(joy1),
 	.joystick_1(joy2),
 	.spinner_0(spinner_0),
@@ -297,7 +299,7 @@ always @(posedge clk_sys) begin
 	if (SYSMODE[5]) begin
 		INP0 = ~spin;
 		INP1 = ~spin;
-		INP2 = ~{m_trig_1, m_trig_1, m_start2, m_start1, 3'b000, m_coin};
+		INP2 = ~{m_trig_1 || ps2_mouse[2:0], m_trig_1 || ps2_mouse[2:0], m_start2, m_start1, 3'b000, m_coin};
 	end
 	else if (SYSMODE[3]) begin
 		INP0 = ~{m_lleft, m_lright, m_lup, m_ldown, m_rleft, m_rright, m_rup, m_rdown};
@@ -320,10 +322,22 @@ spinner #(15,25,5) spinner
 	.plus(m_right),
 	.fast(m_trig_2),
 	.strobe(vs),
-	.spin1_in(spinner_0),
+	.spin1_in(use_mouse ? {ps2_mouse[24],ps2_mouse[15:8]} : spinner_0),
 	.spin2_in(spinner_1),
 	.spin_out(spin)
 );
+
+reg use_mouse = 0;
+always @(posedge clk_sys) begin
+	reg old_ms;
+	reg old_sp;
+	
+	old_ms <= ps2_mouse[24];
+	if(old_ms ^ ps2_mouse[24]) use_mouse = 1;
+	
+	old_sp <= spinner_0[8];
+	if(old_sp ^ spinner_0[8]) use_mouse = 0;
+end
 
 SEGASYSTEM1 GameCore
 ( 
