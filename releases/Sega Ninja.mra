@@ -19,22 +19,22 @@
 		<part>00</part>
 	</rom>
 	<rom index="0" zip="seganinj.zip" md5="501c51f17b8ce86c56c0b5af04448612" type="merged|nonmerged|split">
-		<part name="epr-6594a.116"/>
-		<part name="epr-6595a.109"/>
-		<part name="epr-6596a.96"/>
-		<part name="epr-6559.120"/>
-		<part name="epr-6559.120"/>
-		<part name="epr-6546.117"/>
-		<part name="epr-6548.04"/>
-		<part name="epr-6547.110"/>
-		<part name="epr-6549a.05"/>
-		<part name="epr-6558.62"/>
-		<part name="epr-6556.64"/>
-		<part name="epr-6554.66"/>
-		<part name="epr-6592.61"/>
-		<part name="epr-6590.63"/>
-		<part name="epr-6588.65"/>
-		<part name="pr-5317.76"/>
+		<part crc="a5d0c9d0" name="epr-6594a.116"/>
+		<part crc="b9e6775c" name="epr-6595a.109"/>
+		<part crc="f2eeb0d8" name="epr-6596a.96"/>
+		<part crc="5a1570ee" name="epr-6559.120"/>
+		<part crc="5a1570ee" name="epr-6559.120"/>
+		<part crc="a4785692" name="epr-6546.117"/>
+		<part crc="bdf278c1" name="epr-6548.04"/>
+		<part crc="34451b08" name="epr-6547.110"/>
+		<part crc="7c51488c" name="epr-6549a.05"/>
+		<part crc="2af9eaeb" name="epr-6558.62"/>
+		<part crc="79fd26f7" name="epr-6556.64"/>
+		<part crc="5ac9d205" name="epr-6554.66"/>
+		<part crc="7804db86" name="epr-6592.61"/>
+		<part crc="bf858cad" name="epr-6590.63"/>
+		<part crc="dc931dbb" name="epr-6588.65"/>
+		<part crc="648350b8" name="pr-5317.76"/>
 		<part>
 88 a8 80 a0 88 08 80 00 28 a8 08 88 a0 a8 80 88 
 a8 a0 28 20 a8 a0 28 20 28 a8 08 88 a0 a8 80 88 

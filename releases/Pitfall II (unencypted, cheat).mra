@@ -18,22 +18,22 @@
 		<part>04</part>
 	</rom>
 	<rom index="0" zip="pitfall2.zip" md5="5d980b519dcd328d21dc2c6ff941f0a0" type="merged|nonmerged|split">
-		<part name="pitfall2u/epr-6623.116"/>
-		<part name="pitfall2u/epr-6624a.109"/>
-		<part name="pitfall2u/epr-6625.96"/>
-		<part name="epr-6462.120"/>
-		<part name="epr-6462.120"/>
-		<part name="epr-6454a.117"/>
-		<part name="epr-6455.05"/>
-		<part name="epr-6454a.117"/>
-		<part name="epr-6455.05"/>
-		<part name="epr-6474a.62"/>
-		<part name="epr-6472a.64"/>
-		<part name="epr-6470a.66"/>
-		<part name="epr-6473a.61"/>
-		<part name="epr-6471a.63"/>
-		<part name="epr-6469a.65"/>
-		<part name="pr-5317.76"/>
+		<part crc="bcb47ed6" name="pitfall2u/epr-6623.116"/>
+		<part crc="6e8b09c1" name="pitfall2u/epr-6624a.109"/>
+		<part crc="dc5484ba" name="pitfall2u/epr-6625.96"/>
+		<part crc="86bb9185" name="epr-6462.120"/>
+		<part crc="86bb9185" name="epr-6462.120"/>
+		<part crc="a5d96780" name="epr-6454a.117"/>
+		<part crc="32ee64a1" name="epr-6455.05"/>
+		<part crc="a5d96780" name="epr-6454a.117"/>
+		<part crc="32ee64a1" name="epr-6455.05"/>
+		<part crc="9f1711b9" name="epr-6474a.62"/>
+		<part crc="e0f34a11" name="epr-6472a.64"/>
+		<part crc="1439729f" name="epr-6470a.66"/>
+		<part crc="8e53b8dd" name="epr-6473a.61"/>
+		<part crc="d5bc805c" name="epr-6471a.63"/>
+		<part crc="e4ac6921" name="epr-6469a.65"/>
+		<part crc="648350b8" name="pr-5317.76"/>
 		<part>
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00

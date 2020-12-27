@@ -18,25 +18,25 @@
 		<part>06</part>
 	</rom>
 	<rom index="0" zip="mrviking.zip" md5="7fa47147c580223c95b5e9b0ef8a3774" type="merged|nonmerged|split">
-		<part name="epr-5873.129"/>
-		<part name="epr-5874.130"/>
-		<part name="epr-5875.131"/>
-		<part name="epr-5876.132"/>
-		<part name="epr-5755.133"/>
-		<part name="epr-5756.134"/>
-		<part name="epr-5763.3"/>
-		<part name="epr-5763.3"/>
-		<part name="epr-5749.86"/>
-		<part name="epr-5750.93"/>
-		<part name="epr-5749.86"/>
-		<part name="epr-5750.93"/>
-		<part name="epr-5762.82"/>
-		<part name="epr-5760.81"/>
-		<part name="epr-5758.80"/>
-		<part name="epr-5761.65"/>
-		<part name="epr-5759.64"/>
-		<part name="epr-5757.63"/>
-		<part name="pr-5317.106"/>
+		<part crc="14d21624" name="epr-5873.129"/>
+		<part crc="6df7de87" name="epr-5874.130"/>
+		<part crc="ac226100" name="epr-5875.131"/>
+		<part crc="e77db1dc" name="epr-5876.132"/>
+		<part crc="edd62ae1" name="epr-5755.133"/>
+		<part crc="11974040" name="epr-5756.134"/>
+		<part crc="d712280d" name="epr-5763.3"/>
+		<part crc="d712280d" name="epr-5763.3"/>
+		<part crc="e24682cd" name="epr-5749.86"/>
+		<part crc="6564d1ad" name="epr-5750.93"/>
+		<part crc="e24682cd" name="epr-5749.86"/>
+		<part crc="6564d1ad" name="epr-5750.93"/>
+		<part crc="4a91d08a" name="epr-5762.82"/>
+		<part crc="95045820" name="epr-5760.81"/>
+		<part crc="808ee706" name="epr-5758.80"/>
+		<part crc="f7d61b65" name="epr-5761.65"/>
+		<part crc="5f9bae4e" name="epr-5759.64"/>
+		<part crc="480f7074" name="epr-5757.63"/>
+		<part crc="648350b8" name="pr-5317.106"/>
 		<part>
 28 a8 08 88 88 80 08 00 88 08 80 00 88 80 08 00 
 28 08 a8 88 28 a8 08 88 88 08 80 00 88 08 80 00 

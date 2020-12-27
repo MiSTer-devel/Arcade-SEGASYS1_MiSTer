@@ -18,22 +18,22 @@
 		<part>00</part>
 	</rom>
 	<rom index="0" zip="myhero.zip" md5="cde7c117b285ecfcf17814e30099eee0" type="merged|nonmerged|split">
-		<part name="epr-6963b.116"/>
-		<part name="epr-6964a.109"/>
-		<part name="epr-6927.96"/>
-		<part name="epr-69xx.120"/>
-		<part name="epr-69xx.120"/>
-		<part name="epr-6921.117"/>
-		<part name="epr-6923.04"/>
-		<part name="epr-6922.110"/>
-		<part name="epr-6924.05"/>
-		<part name="epr-6966.62"/>
-		<part name="epr-6960.64"/>
-		<part name="epr-6958.66"/>
-		<part name="epr-6961.61"/>
-		<part name="epr-6959.63"/>
-		<part name="epr-6957.65"/>
-		<part name="pr-5317.76"/>
+		<part crc="4daf89d4" name="epr-6963b.116"/>
+		<part crc="c26188e5" name="epr-6964a.109"/>
+		<part crc="3cbbaf64" name="epr-6927.96"/>
+		<part crc="0039e1e9" name="epr-69xx.120"/>
+		<part crc="0039e1e9" name="epr-69xx.120"/>
+		<part crc="f19e05a1" name="epr-6921.117"/>
+		<part crc="7988adc3" name="epr-6923.04"/>
+		<part crc="37f77a78" name="epr-6922.110"/>
+		<part crc="42bdc8f6" name="epr-6924.05"/>
+		<part crc="157f0401" name="epr-6966.62"/>
+		<part crc="bd381baa" name="epr-6960.64"/>
+		<part crc="714f2c26" name="epr-6958.66"/>
+		<part crc="be53ce47" name="epr-6961.61"/>
+		<part crc="bc04e79a" name="epr-6959.63"/>
+		<part crc="80920112" name="epr-6957.65"/>
+		<part crc="648350b8" name="pr-5317.76"/>
 		<part>
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
