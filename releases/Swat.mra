@@ -16,30 +16,30 @@
 		<part>06</part>
 	</rom>
 	<rom index="0" zip="swat.zip" md5="63402cddf57d92dcfdcecbce7d1d9b83" type="merged|nonmerged|split">
-		<part name="epr5807b.129"/>
-		<part name="epr-5808.130"/>
-		<part name="epr-5809.131"/>
-		<part name="epr-5810.132"/>
-		<part name="epr-5811.133"/>
-		<part name="epr-5812.134"/>
+		<part crc="93db9c9f" name="epr5807b.129"/>
+		<part crc="67116665" name="epr-5808.130"/>
+		<part crc="fd792fc9" name="epr-5809.131"/>
+		<part crc="dc2b279d" name="epr-5810.132"/>
+		<part crc="093e3ab1" name="epr-5811.133"/>
+		<part crc="5bfd692f" name="epr-5812.134"/>
 
-		<part name="epr-5819.3"/>
-		<part name="epr-5819.3"/>
+		<part crc="f6afd0fd" name="epr-5819.3"/>
+		<part crc="f6afd0fd" name="epr-5819.3"/>
 
-		<part name="epr-5805.86"/>
-		<part name="epr-5806.93"/>
-		<part name="epr-5805.86"/>
-		<part name="epr-5806.93"/>
+		<part crc="5a732865" name="epr-5805.86"/>
+		<part crc="26ac258c" name="epr-5806.93"/>
+		<part crc="5a732865" name="epr-5805.86"/>
+		<part crc="26ac258c" name="epr-5806.93"/>
 
-		<part name="epr-5818.82"/>
-		<part name="epr-5816.81"/>
-		<part name="epr-5814.80"/>
+		<part crc="b22033d9" name="epr-5818.82"/>
+		<part crc="4384376d" name="epr-5816.81"/>
+		<part crc="be721c99" name="epr-5814.80"/>
 
-		<part name="epr-5817.65"/>
-		<part name="epr-5815.64"/>
-		<part name="epr-5813.63"/>
+		<part crc="fd942797" name="epr-5817.65"/>
+		<part crc="16ad046c" name="epr-5815.64"/>
+		<part crc="0d42c27e" name="epr-5813.63"/>
 
-		<part name="pr-5317.106"/>
+		<part crc="648350b8" name="pr-5317.106"/>
 		<part>
 88 08 80 00 a0 a8 80 88 88 08 80 00 88 a8 80 a0
 a0 80 20 00 88 08 80 00 a0 a8 80 88 88 08 80 00

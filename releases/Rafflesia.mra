@@ -17,22 +17,22 @@
 		<part>06</part>
 	</rom>
 	<rom index="0" zip="raflesia.zip" md5="9a2dc90713464e4b8f9d9dce43d3e324" type="merged|nonmerged|split">
-		<part name="epr-7411.116"/>
-		<part name="epr-7412.109"/>
-		<part name="epr-7413.96"/>
-		<part name="epr-7420.120"/>
-		<part name="epr-7420.120"/>
-		<part name="epr-7407.117"/>
-		<part name="epr-7409.04"/>
-		<part name="epr-7408.110"/>
-		<part name="epr-7410.05"/>
-		<part name="epr-7419.62"/>
-		<part name="epr-7417.64"/>
-		<part name="epr-7415.66"/>
-		<part name="epr-7418.61"/>
-		<part name="epr-7416.63"/>
-		<part name="epr-7414.65"/>
-		<part name="pr-5317.76"/>
+		<part crc="88s0c6c6" name="epr-7411.116"/>
+		<part crc="d3b8cddf" name="epr-7412.109"/>
+		<part crc="b7e688b3" name="epr-7413.96"/>
+		<part crc="14387666" name="epr-7420.120"/>
+		<part crc="14387666" name="epr-7420.120"/>
+		<part crc="f09fc057" name="epr-7407.117"/>
+		<part crc="819fedb8" name="epr-7409.04"/>
+		<part crc="3189f33c" name="epr-7408.110"/>
+		<part crc="ced74789" name="epr-7410.05"/>
+		<part crc="bfd5f34c" name="epr-7419.62"/>
+		<part crc="e63501bc" name="epr-7417.64"/>
+		<part crc="1s8d6bd6" name="epr-7415.66"/>
+		<part crc="f8cbc9b6" name="epr-7418.61"/>
+		<part crc="093e5693" name="epr-7416.63"/>
+		<part crc="5d20f218" name="epr-7414.65"/>
+		<part crc="648350b8" name="pr-5317.76"/>
 		<part>
 40 10 50 04 44 14 54 01 41 11 51 05 45 15 55 00
 40 10 50 04 44 14 54 01 41 11 51 05 45 15 55 00

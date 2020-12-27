@@ -19,22 +19,22 @@
 		<part>00</part>
 	</rom>
 	<rom index="0" zip="wboy.zip" md5="807e48e44a0c5813b3b28f89a6f8a4ad" type="merged|nonmerged|split">
-		<part name="epr-7489.116"/>
-		<part name="epr-7490.109"/>
-		<part name="epr-7491.96"/>
-		<part name="epr-7498.120"/>
-		<part name="epr-7498.120"/>
-		<part name="epr-7485.117"/>
-		<part name="epr-7487.04"/>
-		<part name="epr-7486.110"/>
-		<part name="epr-7488.05"/>
-		<part name="epr-7497.62"/>
-		<part name="epr-7495.64"/>
-		<part name="epr-7493.66"/>
-		<part name="epr-7496.61"/>
-		<part name="epr-7494.63"/>
-		<part name="epr-7492.65"/>
-		<part name="pr-5317.76"/>
+		<part crc="130f4b70" name="epr-7489.116"/>
+		<part crc="9e656733" name="epr-7490.109"/>
+		<part crc="1f7d0efe" name="epr-7491.96"/>
+		<part crc="78ae1e7b" name="epr-7498.120"/>
+		<part crc="78ae1e7b" name="epr-7498.120"/>
+		<part crc="c2891722" name="epr-7485.117"/>
+		<part crc="2d3a421b" name="epr-7487.04"/>
+		<part crc="8d622c50" name="epr-7486.110"/>
+		<part crc="007c2f1b" name="epr-7488.05"/>
+		<part crc="08d609ca" name="epr-7497.62"/>
+		<part crc="6a0d2c2d" name="epr-7495.64"/>
+		<part crc="89305df4" name="epr-7493.66"/>
+		<part crc="6f61fdf1" name="epr-7496.61"/>
+		<part crc="a8e281c7" name="epr-7494.63"/>
+		<part crc="60f806b1" name="epr-7492.65"/>
+		<part crc="648350b8" name="pr-5317.76"/>
 		<part>
 04 54 51 15 40 44 01 51 55 10 44 41 05 55 50 14
 41 45 00 50 54 11 45 40 04 54 51 15 40 44 01 51

@@ -19,22 +19,22 @@
 		<part>04</part>
 	</rom>
 	<rom index="0" zip="spatter.zip" md5="6b549b8239507ca465e152766831f35c" type="merged|nonmerged|split">
-		<part name="epr-6392.116"/>
-		<part name="epr-6393.109"/>
-		<part name="epr-6394.96"/>
-		<part name="epr-6316.120"/>
-		<part name="epr-6316.120"/>
-		<part name="epr-6306.04"/>
-		<part name="epr-6308.117"/>
-		<part name="epr-6307.05"/>
-		<part name="epr-6309.110"/>
-		<part name="epr-6328.62"/>
-		<part name="epr-6326.64"/>
-		<part name="epr-6324.66"/>
-		<part name="epr-6397.61"/>
-		<part name="epr-6396.63"/>
-		<part name="epr-6395.65"/>
-		<part name="pr-5317.106"/>
+		<part crc="329b4506" name="epr-6392.116"/>
+		<part crc="3b56e25f" name="epr-6393.109"/>
+		<part crc="647c1301" name="epr-6394.96"/>
+		<part crc="1df95511" name="epr-6316.120"/>
+		<part crc="1df95511" name="epr-6316.120"/>
+		<part crc="e871e132" name="epr-6306.04"/>
+		<part crc="99c2d90e" name="epr-6308.117"/>
+		<part crc="0a5ad543" name="epr-6307.05"/>
+		<part crc="7423ad98" name="epr-6309.110"/>
+		<part crc="a2bf2832" name="epr-6328.62"/>
+		<part crc="269fbb4c" name="epr-6326.64"/>
+		<part crc="8ab3b563" name="epr-6324.66"/>
+		<part crc="c60d4471" name="epr-6397.61"/>
+		<part crc="c15ccf3b" name="epr-6396.63"/>
+		<part crc="3f083065" name="epr-6395.65"/>
+		<part crc="648350b8" name="pr-5317.106"/>
 		<part>
 88 08 80 00 00 08 20 28 28 a8 08 88 28 a8 08 88
 28 20 a8 a0 28 20 a8 a0 88 08 80 00 88 08 80 00

@@ -17,22 +17,22 @@
 		<part>04</part>
 	</rom>
 	<rom index="0" zip="4dwarrio.zip" md5="625faf4fd89b5c3f04fabc9ed68bf07a" type="merged|nonmerged|split">
-		<part name="4d.116"/>
-		<part name="4d.109"/>
-		<part name="4d.96"/>
-		<part name="4d.120"/>
-		<part name="4d.120"/>
-		<part name="4d.117"/>
-		<part name="4d.04"/>
-		<part name="4d.110"/>
-		<part name="4d.05"/>
-		<part name="4d.62"/>
-		<part name="4d.64"/>
-		<part name="4d.66"/>
-		<part name="4d.61"/>
-		<part name="4d.63"/>
-		<part name="4d.65"/>
-		<part name="pr5317.76"/>
+		<part crc="546d1bc7" name="4d.116"/>
+		<part crc="f1074ec3" name="4d.109"/>
+		<part crc="387c1e8f" name="4d.96"/>
+		<part crc="5241c009" name="4d.120"/>
+		<part crc="5241c009" name="4d.120"/>
+		<part crc="436e4141" name="4d.117"/>
+		<part crc="8b7cecef" name="4d.04"/>
+		<part crc="6ec5990a" name="4d.110"/>
+		<part crc="f31a1e6a" name="4d.05"/>
+		<part crc="f31b2e09" name="4d.62"/>
+		<part crc="9f442351" name="4d.64"/>
+		<part crc="52bfa2ed" name="4d.66"/>
+		<part crc="5430e925" name="4d.61"/>
+		<part crc="633232bd" name="4d.63"/>
+		<part crc="e9ba4658" name="4d.65"/>
+		<part crc="648350b8" name="pr5317.76"/>
 		<part>
 40 10 50 04 44 14 54 01 41 11 51 05 45 15 55 00
 40 10 50 04 44 14 54 01 41 11 51 05 45 15 55 00
