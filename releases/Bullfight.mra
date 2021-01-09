@@ -12,7 +12,7 @@
 		<dip bits="10,11" name="Lives" ids="Infinite,5,4,3"/>
 		<dip bits="12,13" name="Extend" ids="None,70000,50000,30000"/>
 	</switches>
-	<buttons names="Fire,-,-,-,-,Start 1P,Start 2P,Coin" default="A,Start,Select,R"/>
+	<buttons names="Sword,Wave Cape,-,-,-,Start 1P,Start 2P,Coin" default="A,B,Start,Select,R"/>
 	<rom index="1">
 		<part>00</part>
 	</rom>
