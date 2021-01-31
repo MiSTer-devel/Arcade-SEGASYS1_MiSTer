@@ -17,7 +17,7 @@
 		<part>06</part>
 	</rom>
 	<rom index="0" zip="raflesia.zip" md5="9a2dc90713464e4b8f9d9dce43d3e324" type="merged|nonmerged|split">
-		<part crc="88s0c6c6" name="epr-7411.116"/>
+		<part crc="88a0c6c6" name="epr-7411.116"/>
 		<part crc="d3b8cddf" name="epr-7412.109"/>
 		<part crc="b7e688b3" name="epr-7413.96"/>
 		<part crc="14387666" name="epr-7420.120"/>
