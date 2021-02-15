@@ -16,25 +16,25 @@
 		<part>32</part>
 	</rom>
 	<rom index="0" zip="blockgal.zip" md5="22d71eef5a0b2c58ae02b8cd93f9de6e" type="merged">
-		<part name="bg.116"/>
-		<part name="bg.109"/>
+		<part crc="a99b231a" name="bg.116"/>
+		<part crc="a6b573d5" name="bg.109"/>
 		<part repeat="0x4000">00</part>
-		<part name="bg.120"/>
-		<part name="bg.120"/>
-		<part name="bg.117"/>
-		<part name="bg.04"/>
-		<part name="bg.110"/>
-		<part name="bg.05"/>
-		<part name="bg.62"/>
-		<part name="bg.64"/>
-		<part name="bg.66"/>
-		<part name="bg.61"/>
-		<part name="bg.63"/>
-		<part name="bg.65"/>
-		<part name="pr5317.76"/>
+		<part crc="d848faff" name="bg.120"/>
+		<part crc="d848faff" name="bg.120"/>
+		<part crc="e99cc920" name="bg.117"/>
+		<part crc="213057f8" name="bg.04"/>
+		<part crc="064c812c" name="bg.110"/>
+		<part crc="02e0b040" name="bg.05"/>
+		<part crc="7e3ea4eb" name="bg.62"/>
+		<part crc="17368663" name="bg.64"/>
+		<part crc="2b7dc4fa" name="bg.66"/>
+		<part crc="4dd3d39d" name="bg.61"/>
+		<part crc="0c8bc404" name="bg.63"/>
+		<part crc="ed121306" name="bg.65"/>
+		<part crc="648350b8" name="pr5317.76"/>
 		<part repeat="0x3F00">00</part>
-		<part name="bg.116"/>
-		<part name="bg.109"/>
+		<part crc="a99b231a" name="bg.116"/>
+		<part crc="a6b573d5" name="bg.109"/>
 		<patch offset="0x00000" operation="xor">
 A6 61 6D DA 95 82 30 AE 58 7A 70 86 EF E2 5F 63 56 99 9A 39 8E 84 61 EB F7 8E D7 7A 72 B7 0D 35
 58 F4 5C 86 E3 CA 1E 93 F1 C5 9E 02 87 06 19 5E 45 78 5E 0C DB A0 00 AD 84 36 88 00 4D 75 25 8C
