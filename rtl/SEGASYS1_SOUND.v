@@ -55,7 +55,8 @@ Z80IP cpu(
 	.mx(cpu_mreq),
 	.ix(cpu_iorq),
 	.rd(cpu_rd),
-	.wr(cpu_wr)
+	.wr(cpu_wr),
+	.wait_n(1'b1)
 );
 
 wire  [7:0]		rom_dt;		// ROM

@@ -32,7 +32,14 @@ module SEGASYS1_MAIN
 	input				ROMCL,		// Downloaded ROM image
 	input   [24:0]	ROMAD,
 	input	  [7:0]	ROMDT,
-	input				ROMEN
+	input				ROMEN,
+	
+	input 			PAUSE_N,
+	input  [15:0]	HSAD,
+	output [7:0]	HSDO,
+	input  [7:0]	HSDI,
+	input				HSWE
+	
 );
 
 reg [3:0] clkdiv;
@@ -61,7 +68,8 @@ Z80IP maincpu(
 	.rd(_cpu_rd),
 	.wr(_cpu_wr),
 	.intreq(VBLK),
-	.nmireq(1'b0)
+	.nmireq(1'b0),
+	.wait_n(PAUSE_N)
 );
 
 assign CPUWR = _cpu_wr & cpu_mreq;
@@ -95,8 +103,30 @@ always @(posedge CLK48M) if(ROMEN & `EN_MCPUD) nocrypt <= 1;
 // Work RAM
 wire [7:0]	cpu_rd_mram;
 wire			cpu_cs_mram = (CPUAD[15:12] == 4'b1100) & cpu_mreq;
-SRAM_4096 mainram(CLK48M, CPUAD[11:0], cpu_rd_mram, cpu_cs_mram & CPUWR, CPUDO );
+//SRAM_4096 mainram(CLK48M, CPUAD[11:0], cpu_rd_mram, cpu_cs_mram & CPUWR, CPUDO );
+/*
+	input					clk,
+	input	    [11:0]	adrs,
+	output reg [7:0]	out,
+	input					wr,
+	input		  [7:0]	in
+*/
 
+dpram #(.aWidth(12),.dWidth(8))
+mainram(
+	.clk_a(CLK48M),
+	.addr_a(CPUAD[11:0]),
+	.we_a(cpu_cs_mram & CPUWR),
+	.d_a(CPUDO),
+	.q_a(cpu_rd_mram),
+
+	.clk_b(CLK48M),
+	.addr_b(HSAD[11:0]),
+	.we_b(HSWE),
+	.d_b(HSDI),
+	.q_b(HSDO)
+
+);
 
 // Video mode latch & Sound Request
 wire cpu_cs_sreq = ((CPUAD[7:0] == 8'h14)|(CPUAD[7:0] == 8'h18)) & cpu_iorq;

@@ -37,6 +37,11 @@ Sega System 1 games currently **not yet** implemented:
 * Gardia
 * Noboranka / Zippy Bug
 
+## High score save/load
+
+* To save your scores use the 'Save Settings' option in the OSD
+* All games supported except Water Match and Wonder Boy
+
 ## ROM Files Instructions
 
 **ROMs are not included!** In order to use this arcade core, you will need to provide the correct ROM file yourself.

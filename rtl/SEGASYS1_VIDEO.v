@@ -34,9 +34,15 @@ module SEGASYS1_VIDEO
 	output	[7:0]	cpu_dr,
 	
 	input				ROMCL,		// Downloaded ROM image
-	input   [24:0]	ROMAD,
-	input    [7:0]	ROMDT,
-	input				ROMEN
+	input	 [24:0]	ROMAD,
+	input	 [7:0]	ROMDT,
+	input				ROMEN,
+	
+	input 			PAUSE_N,
+	input  [15:0]	HSAD,
+	output [7:0]	HSDO,
+	input  [7:0]	HSDI,
+	input				HSWE
 );
 
 reg [2:0] clkdiv;
@@ -79,7 +85,8 @@ VIDCPUINTF intf(
 	vram1ad, vram1dt,
 	mixcoll_ad, mixcoll,
 	sprcoll_ad, sprcoll,
-	scrx, scry
+	scrx, scry,
+	PAUSE_N,HSAD,HSDO,HSDI,HSWE
 );
 
 
@@ -189,7 +196,13 @@ module VIDCPUINTF
 	input				sprcoll,
 	
 	output reg [15:0] scrx,
-	output reg  [7:0] scry
+	output reg  [7:0] scry,
+	
+	input 			PAUSE_N,
+	input  [15:0]	HSAD,
+	output [7:0]	HSDO,
+	input  [7:0]	HSDI,
+	input				HSWE
 );
 
 // CPU Address Decoders
@@ -252,6 +265,15 @@ always @ ( posedge clk or posedge RESET) begin
 	end
 end
 
+// Hiscore address decoder
+wire HS_CS_SPRAM = (HSAD[15:11] == 5'b1101_0) & ~PAUSE_N;
+wire HS_CS_VRAM0 = (HSAD[15:11] == 5'b1110_0) & ~PAUSE_N;
+wire HS_CS_VRAM1 = (HSAD[15:11] == 5'b1110_1) & ~PAUSE_N;
+
+assign HSDO = HS_CS_SPRAM ? cpu_rd_spram :
+					HS_CS_VRAM0 ? cpu_rd_vram0 : 
+					HS_CS_VRAM1 ? cpu_rd_vram1 : 
+										8'b00000000;
 
 // Palette RAM
 wire  [7:0] cpu_rd_palram;
@@ -262,12 +284,20 @@ DPRAM2048 palram(
 
 
 // Sprite Attribute RAM
-wire  [7:0] cpu_rd_spram;
+wire [7:0]	cpu_rd_spram;
+
+// Sprite RAM hiscore mux
+wire [10:0]	sprad0;
+wire [7:0]	sprdw0;
+wire 			sprwr0;
+assign sprad0 = HS_CS_SPRAM ? HSAD[10:0] : cpu_ad[10:0];
+assign sprdw0 = HS_CS_SPRAM ? HSDI : cpu_dw;
+assign sprwr0 = HS_CS_SPRAM ? HSWE : cpu_wr_spram;
+
 DPRAM2048_8_16 sprram(
-	clk, cpu_ad[10:0], cpu_dw, cpu_wr_spram,
+	clk, sprad0, sprdw0, sprwr0,
 	clk, sprad, sprdt, cpu_rd_spram
 );
-
 
 // Collision RAM (Mixer & Sprite)
 wire [7:0]	cpu_rd_mixcoll;
@@ -282,12 +312,29 @@ COLLRAM_S sprc(
 
 // VRAM
 wire  [7:0] cpu_rd_vram0, cpu_rd_vram1;
+// VRAM0 hiscore mux
+wire [10:0]	vram0ad0;
+wire [7:0]	vram0dw0;
+wire 			vram0wr0;
+assign vram0ad0 = HS_CS_VRAM0 ? HSAD[10:0] : cpu_ad[10:0];
+assign vram0dw0 = HS_CS_VRAM0 ? HSDI : cpu_dw;
+assign vram0wr0 = HS_CS_VRAM0 ? HSWE : cpu_wr_vram0;
+
 VRAM vram0(
-	clk, cpu_ad[10:0], cpu_rd_vram0, cpu_dw, cpu_wr_vram0,
+	clk, vram0ad0, cpu_rd_vram0, vram0dw0, vram0wr0,
 	clk, vram0ad, vram0dt
 );
+
+// VRAM1 hiscore mux
+wire [10:0]	vram1ad0;
+wire [7:0]	vram1dw0;
+wire 			vram1wr0;
+assign vram1ad0 = HS_CS_VRAM1 ? HSAD[10:0] : cpu_ad[10:0];
+assign vram1dw0 = HS_CS_VRAM1 ? HSDI : cpu_dw;
+assign vram1wr0 = HS_CS_VRAM1 ? HSWE : cpu_wr_vram1;
+
 VRAM vram1(
-	clk, cpu_ad[10:0], cpu_rd_vram1, cpu_dw, cpu_wr_vram1,
+	clk, vram1ad0, cpu_rd_vram1, vram1dw0, vram1wr0,
 	clk, vram1ad, vram1dt
 );
 

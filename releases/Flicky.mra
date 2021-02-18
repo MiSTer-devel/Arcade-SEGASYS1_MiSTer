@@ -13,7 +13,7 @@
 		<dip bits="12,13" name="Extend" ids="40k 140k 280k,40k 120k 240k,30k 100k 200k,30k 80k 160k"/>
 		<dip bits="14"    name="Difficulty" ids="Hard,Easy"/>
 	</switches>
-	<buttons names="Flap,-,-,-,-,Start 1P,Start 2P,Coin" default="A,Start,Select,R"/>
+	<buttons names="Flap,-,-,-,-,Start 1P,Start 2P,Coin,Pause" default="A,Start,Select,R,C"/>
 	<rom index="1">
 		<part>00</part>
 	</rom>
@@ -45,4 +45,11 @@ a0 80 a8 88 28 08 20 00 28 08 20 00 a0 80 a8 88
 28 08 20 00 28 08 20 00 08 88 00 80 88 80 08 00 
 		</part>
 	</rom>
+	<rom index="3" md5="none">
+		<part>
+		 00 00 E7 00 31 00 41 00
+		 00 00 C0 D5 03 00 00 00
+		</part>
+	</rom>
+	<nvram index="4" size="52"/>
 </misterromdescription>

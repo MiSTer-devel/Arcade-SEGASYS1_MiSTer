@@ -14,7 +14,7 @@
 		<dip bits="13" name="Allow Continue" ids="No,Yes"/>
 		<dip bits="14" name="Difficulty" ids="Hard,Easy"/>
 	</switches>
-	<buttons names="Fire 1,Fire 2,Hide,-,-,Start 1P,Start 2P,Coin" default="A,B,X,Start,Select,R"/>
+	<buttons names="Fire 1,Fire 2,Hide,-,-,Start 1P,Start 2P,Coin,Pause" default="A,B,X,Start,Select,R,C"/>
 	<rom index="1">
 		<part>00</part>
 	</rom>
@@ -46,4 +46,10 @@ a8 a0 28 20 88 a8 80 a0 a8 a0 28 20 28 a8 08 88
 88 a8 80 a0 88 a8 80 a0 a8 a0 28 20 28 08 a8 88 
 		</part>
 	</rom>
+	<rom index="3" md5="none">
+		<part>
+		 00 00 EF 00 31 00 43 00 
+		</part>
+	</rom>
+	<nvram index="4" size="49"/>
 </misterromdescription>
