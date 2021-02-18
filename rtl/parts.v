@@ -43,7 +43,7 @@ end
 
 endmodule
 
-
+`ifdef DONTUSE
 //----------------------------------
 //  4K SRAM
 //----------------------------------
@@ -63,6 +63,7 @@ always @( posedge clk ) begin
 end
 
 endmodule 
+`endif
 
 
 //----------------------------------

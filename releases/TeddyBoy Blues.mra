@@ -13,9 +13,9 @@
 		<dip bits="12,13" name="Extend" ids="600k,400k 800k,200k 600k,100k 400k"/>
 		<dip bits="14" name="Difficulty" ids="Hard,Easy"/>
 	</switches>
-	<buttons names="Fire,Jump,-,-,-,Start 1P,Start 2P,Coin" default="A,B,Start,Select,R"/>
+	<buttons names="Fire,Jump,-,-,-,Start 1P,Start 2P,Coin,Pause" default="A,B,Start,Select,R,C"/>
 	<rom index="1">
-		<part>00</part>
+		<part>40</part>
 	</rom>
 	<rom index="0" zip="teddybb.zip" md5="f2fd1aa2db99df38b56d4a05c192db32" type="merged|nonmerged|split">
 		<part crc="5939817e" name="epr-6768.116"/>
@@ -45,4 +45,11 @@ a0 20 a8 28 a0 80 a8 88 a0 80 a8 88 a0 80 a8 88
 80 00 a0 20 a0 80 a8 88 a0 a8 20 28 a0 20 a8 28 
 		</part>
 	</rom>
+	<rom index="3" md5="none">
+		<part>
+		 00 00 C5 78 03 00 00 00 
+		 00 00 EF 03 31 00 49 00 
+		</part>
+	</rom>
+	<nvram index="4" size="63"/>
 </misterromdescription>

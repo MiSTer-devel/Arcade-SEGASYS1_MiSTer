@@ -13,7 +13,7 @@
 		<dip bits="10,11"  name="Time" ids="Fastest,Faster,Fast,Normal"/>
 		<dip bits="14"     name="Difficulty" ids="Hard,Easy"/>
 	</switches>
-	<buttons names="RJoy Right,RJoy Left,RJoy Down,RJoy Up,Button,Start 1P,Start 2P,Coin" default="A,Y,B,X,L,Start,Select,R"/>
+	<buttons names="RJoy Right,RJoy Left,RJoy Down,RJoy Up,Button,Start 1P,Start 2P,Coin,Pause" default="A,Y,B,X,L,Start,Select,R,C"/>
 	<rom index="1">
 		<part>0E</part>
 	</rom>

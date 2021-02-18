@@ -22,18 +22,35 @@ module SEGASYSTEM1
 
 	output  [15:0] SOUT,			// Sound Out (PCM)
 
-	
 	input				ROMCL,		// Downloaded ROM image
 	input   [24:0]	ROMAD,
 	input	  [7:0]	ROMDT,
-	input				ROMEN
-);
+	input				ROMEN,
+
+	input 			PAUSE_N,
+	input  [15:0]	HSAD,
+	output [7:0]	HSDO,
+	input  [7:0]	HSDI,
+	input				HSWE
+
+	);
 
 // CPU
 wire [15:0] CPUAD;
 wire  [7:0] CPUDO,VIDDO,SNDNO,VIDMD;
 wire			CPUWR,VIDCS,VBLK;
 wire			SNDRQ;
+
+
+// HISCORE MUX
+wire [7:0]	HSDO_MAIN;
+wire [7:0]	HSDO_VIDEO;
+wire			HSWE_MAIN;
+wire			HSWE_VIDEO;
+
+assign HSWE_MAIN = (HSAD[15:12] == 4'b1100);
+assign HSWE_VIDEO = ~HSWE_MAIN;
+assign HSDO = HSWE_MAIN ? HSDO_MAIN : HSDO_VIDEO;
 
 SEGASYS1_MAIN Main (
 	.RESET(reset),
@@ -45,7 +62,11 @@ SEGASYS1_MAIN Main (
 	.SNDRQ(SNDRQ),.SNDNO(SNDNO),
 	.VIDMD(VIDMD),
 	
-	.ROMCL(ROMCL),.ROMAD(ROMAD),.ROMDT(ROMDT),.ROMEN(ROMEN)
+	.ROMCL(ROMCL),.ROMAD(ROMAD),.ROMDT(ROMDT),.ROMEN(ROMEN),
+	
+	.PAUSE_N(PAUSE_N),
+	.HSAD(HSAD),.HSDO(HSDO_MAIN),.HSDI(HSDI),.HSWE(HSWE_MAIN & HSWE)
+	
 );
 
 // Video
@@ -58,7 +79,10 @@ SEGASYS1_VIDEO Video (
 	.cpu_ad(CPUAD),.cpu_wr(CPUWR),.cpu_dw(CPUDO),
 	.cpu_rd(VIDCS),.cpu_dr(VIDDO),
 
-	.ROMCL(ROMCL),.ROMAD(ROMAD),.ROMDT(ROMDT),.ROMEN(ROMEN)
+	.ROMCL(ROMCL),.ROMAD(ROMAD),.ROMDT(ROMDT),.ROMEN(ROMEN),
+	
+	.PAUSE_N(PAUSE_N),
+	.HSAD(HSAD),.HSDO(HSDO_VIDEO),.HSDI(HSDI),.HSWE(HSWE_VIDEO & HSWE)
 );
 assign POUT = VIDMD[4] ? 8'd0 : OPIX;
 
