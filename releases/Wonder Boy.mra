@@ -54,12 +54,4 @@
 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15
 		</part>
 	</rom>
-	<rom index="3" md5="none">
-		<part>
-		 00 00 C1 00 FF 00 00 00
-		 00 00 C2 00 40 00 01 00
-		 00 00 E8 56 0F 01 10 00
-		</part>
-	</rom>
-	<nvram index="4" size="79"/>
 </misterromdescription>
