@@ -168,8 +168,6 @@ wire	[15:0]	joy = joy1 | joy2;
 wire	[8:0]		spinner_0, spinner_1;
 wire	[24:0]	ps2_mouse;
 
-reg 				pause;
-
 wire	[21:0]	gamma_bus;
 
 hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
@@ -235,11 +233,35 @@ wire m_start2 = joy[10];
 wire m_coin   = joy[11];
 wire m_pause  = joy[12];
 
-reg pause_toggle = 1'b0;
+// PAUSE SYSTEM
+reg				pause;									// Pause signal (active-high)
+reg				pause_toggle = 1'b0;					// User paused (active-high)
+reg [31:0]		pause_timer;							// Time since pause
+reg [31:0]		pause_timer_dim = 31'h1C9C3800;	// Time until screen dim (10 seconds @ 48Mhz)
+
 always @(posedge clk_sys) begin
-    reg old_pause;
-    old_pause <= m_pause;
-    if(~old_pause & m_pause) pause_toggle <= ~pause_toggle;
+	// User pause toggle
+	reg old_pause;
+	old_pause <= m_pause;
+	if(~old_pause & m_pause) pause_toggle <= ~pause_toggle;
+	
+	// Screen dim while paused
+	rgb_out <= {r,g,b};
+	if(pause_toggle)
+	begin
+		if(pause_timer<pause_timer_dim)
+		begin
+			pause_timer <= pause_timer + 1'b1;
+		end
+		else
+		begin
+			rgb_out <= {r >> 1,g >> 1, b >> 1};
+		end
+	end
+	else
+	begin
+		pause_timer <= 1'b0;
+	end
 end
 
 ///////////////////////////////////////////////////
@@ -249,6 +271,8 @@ wire ce_vid;
 wire hs, vs;
 wire [2:0] r,g;
 wire [1:0] b;
+
+wire [7:0] rgb_out;
 
 reg ce_pix;
 always @(posedge clk_hdmi) begin
@@ -263,7 +287,7 @@ arcade_video #(288,8) arcade_video
 
 	.clk_video(clk_hdmi),
 
-	.RGB_in({r,g,b}),
+	.RGB_in(rgb_out),
 	.HBlank(hblank),
 	.VBlank(vblank),
 	.HSync(~hs),
@@ -378,25 +402,31 @@ SEGASYSTEM1 GameCore
 	.ROMEN(ioctl_wr & (ioctl_index==0)),
 	
 	.PAUSE_N(~pause),
-	.HSAD(ram_address),
+	.HSAD(hs_address),
 	.HSDO(ioctl_din),
-	.HSDI(hiscore_to_ram),
-	.HSWE(hiscore_write)
+	.HSDI(hs_to_ram),
+	.HSWE(hs_write)
 
 );
 
 
-wire [15:0]ram_address;
-wire [7:0]hiscore_to_ram;
-wire hiscore_write;
-wire hiscore_pause;
+wire [15:0]hs_address;
+wire [7:0]hs_to_ram;
+wire hs_write;
+wire hs_pause;
 
-assign pause = hiscore_pause || pause_toggle;
+assign pause = hs_pause || pause_toggle;
 
-hiscore #(16) hi (
+hiscore #(
+	.HS_ADDRESSWIDTH(16),
+	.CFG_ADDRESSWIDTH(5),
+	.DELAY_CHECKWAIT(24'h7FFFF),
+	.DELAY_CHECKHOLD(4'b1111)
+	
+) hi (
 	.clk(clk_sys),
 	.reset(iRST),
-	.delay(SYSMODE[6] ? 31'h4D3F6400 : 1'b0),
+	.delay(SYSMODE[6] ? 31'h4D3F6400 : 24'h7FFFF),
 	.ioctl_upload(ioctl_upload),
 	.ioctl_download(ioctl_download),
 	.ioctl_wr(ioctl_wr),
@@ -404,10 +434,10 @@ hiscore #(16) hi (
 	.ioctl_dout(ioctl_dout),
 	.ioctl_din(ioctl_din),
 	.ioctl_index(ioctl_index),
-	.ram_address(ram_address),
-	.data_to_ram(hiscore_to_ram),
-	.ram_write(hiscore_write),
-	.pause(hiscore_pause)
+	.ram_address(hs_address),
+	.data_to_ram(hs_to_ram),
+	.ram_write(hs_write),
+	.pause(hs_pause)
 );
 
 
