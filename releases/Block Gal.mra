@@ -3,7 +3,9 @@
 	<mameversion>0217</mameversion>
 	<setname>blockgal</setname>
 	<mratimestamp>20200107000000</mratimestamp>
-	<category>Arkanoid</category>
+	<year>1987</year>
+	<manufacturer>Sega</manufacturer>
+	<category>Breakout Clone</category>
 	<rbf>segasys1</rbf>
     <switches default="FF,82">
 		<dip bits="9"  name="Demo Sound" ids="Off,On"/>
