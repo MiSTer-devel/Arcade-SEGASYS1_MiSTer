@@ -5,7 +5,6 @@
 	<mratimestamp>202001070000</mratimestamp>
 	<year>1984</year>
 	<manufacturer>Sega</manufacturer>
-	<category>Maze / Cat and Mouse</category>
 	<category>Platform</category>
 	<rbf>segasys1</rbf>
     <switches default="FF,7C">
