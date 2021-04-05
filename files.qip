@@ -10,6 +10,6 @@ set_global_assignment -name VERILOG_FILE rtl/z80ip.v
 set_global_assignment -name VERILOG_FILE rtl/parts.v
 set_global_assignment -name VERILOG_FILE rtl/spinner.sv
 set_global_assignment -name VERILOG_FILE rtl/HVGEN.v
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/hiscore.sv
+set_global_assignment -name VERILOG_FILE rtl/hiscore.v
 set_global_assignment -name VHDL_FILE rtl/dpram.vhd
 set_global_assignment -name SYSTEMVERILOG_FILE "Arcade-SEGASYS1.sv"

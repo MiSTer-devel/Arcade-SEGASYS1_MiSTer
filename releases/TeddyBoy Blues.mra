@@ -47,9 +47,10 @@ a0 20 a8 28 a0 80 a8 88 a0 80 a8 88 a0 80 a8 88
 	</rom>
 	<rom index="3" md5="none">
 		<part>
-		 00 00 C5 78 03 00 00 00 
-		 00 00 EF 03 31 00 49 00 
+		55 00 00 00 00 FF 00 02 00 02 00 01 00 FF 00 00
+		00 00 C5 78 00 03 00 00
+		00 00 EF 03 00 31 00 49
 		</part>
 	</rom>
-	<nvram index="4" size="63"/>
+	<nvram index="4" size="52"/>
 </misterromdescription>
