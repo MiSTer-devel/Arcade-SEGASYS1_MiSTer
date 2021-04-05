@@ -49,7 +49,8 @@ a0 20 80 00 a0 20 80 00 08 88 00 80 28 08 a8 88
 	</rom>
 	<rom index="3" md5="none">
 		<part>
-		 00 00 C9 3F 3F 01 00 00 
+		00 0F FF FF 00 FF 00 02 00 02 00 01 00 FF 00 00
+		00 00 C9 3F 00 3F 01 00
 		</part>
 	</rom>
 	<nvram index="4" size="63"/>
