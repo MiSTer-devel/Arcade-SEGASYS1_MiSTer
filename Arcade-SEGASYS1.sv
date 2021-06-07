@@ -193,8 +193,8 @@ localparam CONF_STR = {
 	"-;",
 	"R0,Reset;",
 	"J1,Trig1,Trig2,Trig3,Trig4,Trig5,Start 1P,Start 2P,Coin,Pause;",
-	"jn,A,B,X,,,Start,Select,R,;",
-	"jp,B,A,Y,,,Start,,Select,;",
+	"jn,A,B,X,,,Start,Select,R,L;",
+	"jp,B,A,Y,,,Start,Select,R,L;",
 	"V,v",`BUILD_DATE
 };
 
@@ -295,8 +295,8 @@ wire m_trig_1 = joy[4];
 wire m_trig_2 = joy[5];
 wire m_trig_3 = joy[6];
 
-wire m_start1 = joy[9];
-wire m_start2 = joy[10];
+wire m_start1 = joy1[9];
+wire m_start2 = joy[10] | joy2[9];
 wire m_coin   = joy[11];
 wire m_pause  = joy[12];
 
