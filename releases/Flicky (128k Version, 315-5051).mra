@@ -1,21 +1,41 @@
 <misterromdescription>
-	<name>Flicky (128k Version, 315-5051)</name>
-	<mameversion>0217</mameversion>
-	<setname>flicky</setname>
-	<mratimestamp>202001070000</mratimestamp>
+	<name>Flicky</name>
+	<region></region>
+	<homebrew>no</homebrew>
+	<bootleg>no</bootleg>
+	<version>128k Version, 315-5051</version>
+	<alternative></alternative>
+	<platform>Sega System 1</platform>
+	<series></series>
 	<year>1984</year>
 	<manufacturer>Sega</manufacturer>
 	<category>Platform</category>
+
+	<setname>flicky</setname>
+	<parent>flicky</parent>
+	<mameversion>0217</mameversion>
 	<rbf>segasys1</rbf>
-    <switches default="FF,7C">
-		<dip bits="10,11" name="Lives" ids="Infinite,5,4,3"/>
-		<dip bits="12,13" name="Extend" ids="40k 140k 280k,40k 120k 240k,30k 100k 200k,30k 80k 160k"/>
-		<dip bits="14"    name="Difficulty" ids="Hard,Easy"/>
-	</switches>
-	<buttons names="Flap,-,-,-,-,Start 1P,Start 2P,Coin,Pause" default="A,Start,Select,R,C"/>
+	<about author="MrX-8B" source="https://github.com/MiSTer-devel/Arcade-SEGASYS1_MiSTer" twitter="@MrX_8B" webpage="https://patreon.com/MrX_8B"></about>
+
+	<resolution>15kHz</resolution>
+	<rotation>horizontal</rotation>
+	<flip></flip>
+
+	<players>2 (alternating)</players>
+	<joystick>2-way horizontal</joystick>
+	<special_controls></special_controls>
+	<num_buttons>1</num_buttons>
+	<buttons default="A,Start,Select,R,C" names="Flap,-,-,-,-,Start 1P,Start 2P,Coin,Pause"></buttons>
+
+	<switches default="FF,7C">
+		<dip bits="10,11" ids="Infinite,5,4,3" name="Lives"></dip>
+		<dip bits="12,13" ids="40k 140k 280k,40k 120k 240k,30k 100k 200k,30k 80k 160k" name="Extend"></dip>
+		<dip bits="14" ids="Hard,Easy" name="Difficulty"></dip>
+		</switches>
+
 	<rom index="1">
 		<part>00</part>
-	</rom>
+		</rom>
 	<rom index="0" zip="flicky.zip" md5="39cd01b4c2ab927c06985eceb74c0dbd" type="merged|nonmerged|split">
 		<part crc="296f1492" name="epr-5978a.116"/>
 		<part crc="64b03ef9" name="epr-5979a.109"/>
@@ -44,6 +64,7 @@ a0 80 a8 88 28 08 20 00 28 08 20 00 a0 80 a8 88
 28 08 20 00 28 08 20 00 08 88 00 80 88 80 08 00 
 		</part>
 	</rom>
+	<rom index="2"></rom>
 	<rom index="3" md5="none">
 		<part>
 		00 8F FF FF 00 FF 00 02 00 02 00 01 00 FF 00 00
@@ -51,5 +72,11 @@ a0 80 a8 88 28 08 20 00 28 08 20 00 a0 80 a8 88
 		00 00 C0 D5 00 03 00 00
 		</part>
 	</rom>
+	<rom index="4"></rom>
+
 	<nvram index="4" size="52"/>
+
+	<remark></remark>
+
+	<mratimestamp>20210430005030</mratimestamp>
 </misterromdescription>
