@@ -276,15 +276,15 @@ always @(posedge clk_sys) begin
 	end
 end
 
-wire m_lup    = joy[3];
-wire m_ldown  = joy[2];
-wire m_lleft  = joy[1];
-wire m_lright = joy[0];
-wire m_rup    = joy[7];
-wire m_rdown  = joy[6];
-wire m_rleft  = joy[5];
-wire m_rright = joy[4];
-wire m_trig   = joy[8];
+wire m_lup    = joy1[3];
+wire m_ldown  = joy1[2];
+wire m_lleft  = joy1[1];
+wire m_lright = joy1[0];
+wire m_rup    = joy1[7] | joy2[3];
+wire m_rdown  = joy1[6] | joy2[2];
+wire m_rleft  = joy1[5] | joy2[1];
+wire m_rright = joy1[4] | joy2[0];
+wire m_trig   = joy1[8];
 
 wire m_up     = joy[3];
 wire m_down   = joy[2];
