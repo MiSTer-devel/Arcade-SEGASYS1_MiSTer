@@ -9,7 +9,7 @@ module HVGEN
 	input	 [14:0]		iRGB,
 
 	output reg [14:0]	oRGB,
-	output reg			HBLK = 1,
+	output    			HBLK,
 	output reg			VBLK = 1,
 	output reg			HSYN = 1,
 	output reg			VSYN = 1,
@@ -34,23 +34,26 @@ wire [8:0] VS_B = 9'd226+(VOFFS*3'd4);
 wire [8:0] VS_E =   9'd4+(VS_B);
 wire [8:0] VS_N = 9'd481+(VS_E-9'd230);
 
+reg hblk240;
+reg hblk256;
+
+assign HBLK = H240 ? hblk240 : hblk256;
+
 always @(posedge CLK) begin
 	if (PCLK_EN) begin
 		hcnt <= hcnt + 1'd1;
 		case (hcnt)
-		 25: HBLK <= H240;
-		 37: HBLK <= 0;
-		277: HBLK <= H240;
-		281: HBLK <= 1;
+		 30: hblk256 <= 0;
+		 38: hblk240 <= 0;
+		278: hblk240 <= 1;
+		286: hblk256 <= 1;
 		511: begin
-			hcnt <= 0;
 			case (vcnt)
 				223: begin VBLK <= 1; vcnt <= vcnt+9'd1; end
 				511: begin VBLK <= 0; vcnt <= 0; end
 				default: vcnt <= vcnt+9'd1;
 			endcase
 			end
-			default: hcnt <= hcnt+9'd1;
 		endcase
 
 		if (hcnt==HS_B) begin HSYN <= 0; end
@@ -59,9 +62,8 @@ always @(posedge CLK) begin
 		if (vcnt==VS_B) begin VSYN <= 0; end
 		if (vcnt==VS_E) begin VSYN <= 1; vcnt <= VS_N; end
 
-		oRGB <= (HBLK|VBLK) ? 12'h0 : iRGB;
+		oRGB <= iRGB;
 	end
 end
 
 endmodule
-
