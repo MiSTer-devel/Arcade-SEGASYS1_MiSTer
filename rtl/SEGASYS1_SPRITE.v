@@ -19,7 +19,7 @@ module SEGASYS1_SPRITE
 	output reg		 	sprcoll,
 	output reg [9:0]	sprcoll_ad,
 
-	output reg [10:0]	sprpx
+	output    [10:0]	sprpx
 );
 
 wire [8:0] HPOS = PH;
@@ -59,16 +59,14 @@ wire [10:0] _prevpix;
 reg  [10:0]  prevpix;
 wire side = VPOS[0];
 
-wire [10:0] opix;
 reg   [9:0] rad0,rad1=1;
 LineBuf lbuf(
-	VCLKx8, rad0, (rad0==rad1), opix, 
+	VCLKx8, rad0, (rad0==rad1), sprpx, 
 	VCLKx8, {~side,xpos}, wdat, we & (wdat[3:0] != 4'h0), _prevpix
 );
 always @(posedge VCLKx8) begin
 	rad0 <= {side,HPOS};
 	if (VCLK_EN) begin
-		sprpx <= opix;
 		rad1  <= rad0;
 	end
 end
