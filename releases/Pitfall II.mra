@@ -36,7 +36,7 @@
 		</switches>
 
 	<rom index="1">
-		<part>04</part>
+		<part>00</part>
 		</rom>
 	<rom index="0" md5="cb45625a256175bd239e3d3eef70f779" type="merged|nonmerged|split" zip="pitfall2.zip">
 		<part crc="bcc8406b" name="epr-6456a.116"></part>
