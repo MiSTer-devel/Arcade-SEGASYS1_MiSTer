@@ -14,7 +14,7 @@ module emu
 	input         RESET,
 
 	//Must be passed to hps_io module
-	inout  [45:0] HPS_BUS,
+	inout  [48:0] HPS_BUS,
 
 	//Base video clock. Usually equals to CLK_SYS.
 	output        CLK_VIDEO,
@@ -37,12 +37,14 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 	output        VGA_SCALER, // Force VGA scaler
+	output        VGA_DISABLE, // analog out is off
 
 	input  [11:0] HDMI_WIDTH,
 	input  [11:0] HDMI_HEIGHT,
+	output        HDMI_FREEZE,
 
 `ifdef MISTER_FB
-	// Use framebuffer in DDRAM (USE_FB=1 in qsf)
+	// Use framebuffer in DDRAM
 	// FB_FORMAT:
 	//    [2:0] : 011=8bpp(palette) 100=16bpp 101=24bpp 110=32bpp
 	//    [3]   : 0=16bits 565 1=16bits 1555
@@ -174,8 +176,8 @@ assign FB_FORCE_BLANK = '0;
 wire screen_H = status[6]|~SYSMODE[1]|direct_video;
 wire [1:0] ar = status[15:14];
 
-assign VIDEO_ARX = (!ar) ? (screen_H ? 8'd4 : 8'd3) : (ar - 1'd1);
-assign VIDEO_ARY = (!ar) ? (screen_H ? 8'd3 : 8'd4) : 12'd0;
+assign VIDEO_ARX = (!ar) ? (screen_H ? 12'd2400 : 12'd2191) : (ar - 1'd1);
+assign VIDEO_ARY = (!ar) ? (screen_H ? 12'd2191 : 12'd2400) : 12'd0;
 
 `include "build_id.v" 
 localparam CONF_STR = {
@@ -236,17 +238,16 @@ wire	[24:0]	ps2_mouse;
 
 wire	[21:0]	gamma_bus;
 
-hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
+hps_io #(.CONF_STR(CONF_STR)) hps_io
 (
 	.clk_sys(clk_sys),
 	.HPS_BUS(HPS_BUS),
-
-	.conf_str(CONF_STR),
 
 	.buttons(buttons),
 
 	.status(status),
 	.status_menumask(direct_video),
+	.video_rotated(video_rotated),
 
 	.forced_scandoubler(forced_scandoubler),
 	.gamma_bus(gamma_bus),
@@ -361,6 +362,8 @@ arcade_video #(288,8) arcade_video
 
 wire no_rotate = screen_H;
 wire rotate_ccw = ~SYSMODE[4];
+wire flip = 0;
+wire video_rotated;
 screen_rotate screen_rotate (.*);
 
 wire			PCLK_EN;
