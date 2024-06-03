@@ -172,6 +172,8 @@ assign LED_POWER = 0;
 assign BUTTONS   = 0;
 assign AUDIO_MIX = 0;
 assign FB_FORCE_BLANK = '0;
+assign VGA_DISABLE = 0;
+assign HDMI_FREEZE = 0;
 
 wire screen_H = status[6]|~SYSMODE[1]|direct_video;
 wire [1:0] ar = status[15:14];
