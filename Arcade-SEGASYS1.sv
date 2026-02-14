@@ -250,7 +250,7 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 	.buttons(buttons),
 
 	.status(status),
-	.status_menumask(direct_video),
+	.status_menumask({SYSMODE[3], direct_video}),
 	.video_rotated(video_rotated),
 
 	.forced_scandoubler(forced_scandoubler),
