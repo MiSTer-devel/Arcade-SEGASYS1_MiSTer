@@ -190,6 +190,8 @@ localparam CONF_STR = {
 	"O35,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
 	"O7,Pause when OSD is open,On,Off;",
 	"-;",
+	"h1O8,Right Stroke,Buttons,Second Joystick;",
+	"-;",
 	"DIP;",
 	"-;",
 	"OOS,Analog Video H-Pos,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31;",
@@ -248,7 +250,7 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 	.buttons(buttons),
 
 	.status(status),
-	.status_menumask(direct_video),
+	.status_menumask({SYSMODE[3], direct_video}),
 	.video_rotated(video_rotated),
 
 	.forced_scandoubler(forced_scandoubler),
@@ -283,10 +285,10 @@ wire m_lup    = joy1[3];
 wire m_ldown  = joy1[2];
 wire m_lleft  = joy1[1];
 wire m_lright = joy1[0];
-wire m_rup    = joy1[7] | joy2[3];
-wire m_rdown  = joy1[6] | joy2[2];
-wire m_rleft  = joy1[5] | joy2[1];
-wire m_rright = joy1[4] | joy2[0];
+wire m_rup    = (SYSMODE[3] && status[8]) ? joy2[3] : joy1[7];
+wire m_rdown  = (SYSMODE[3] && status[8]) ? joy2[2] : joy1[6];
+wire m_rleft  = (SYSMODE[3] && status[8]) ? joy2[1] : joy1[5];
+wire m_rright = (SYSMODE[3] && status[8]) ? joy2[0] : joy1[4];
 wire m_trig   = joy1[8];
 
 wire m_up     = joy[3];
