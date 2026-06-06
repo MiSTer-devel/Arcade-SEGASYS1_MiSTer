@@ -96,6 +96,7 @@ wire [8:0] BG0HP, BG0VP;
 wire [8:0] BG1HP, BG1VP;
 VIDHVGEN hv(
 	PH,    PV,
+	VFLP,
 	scrx,  scry,
 	HPOS,  VPOS,
 	BG0HP, BG0VP,
@@ -108,12 +109,14 @@ VIDHVGEN hv(
 wire [10:0] SPRPX;
 wire [17:0] sprchad;
 wire  [7:0] sprchdt;
+wire [8:0] SPR_HPOS = VFLP ? (HPOS + 9'd27) : HPOS;
+wire [8:0] SPR_VPOS = VFLP ? (VPOS - 9'd5) : VPOS;
 DLROM #(16,8) sprchr(VCLKx8,sprchad,sprchdt, ROMCL,ROMAD,ROMDT,ROMEN & `EN_SPRITE );
 SEGASYS1_SPRITE sprite(
 	.VCLKx8(VCLKx8),
 	.VCLKx4(VCLKx4),
 	.VCLKx4_EN(VCLKx4_EN), .VCLK_EN(VCLK_EN),
-	.PH(HPOS),.PV(VPOS),
+	.PH(SPR_HPOS),.PV(SPR_VPOS),
 	.sprad(sprad),.sprdt(sprdt),
 	.sprchad(sprchad),.sprchdt(sprchdt),
 	.sprcoll(sprcoll),.sprcoll_ad(sprcoll_ad),
@@ -128,23 +131,54 @@ wire [23:0] tiledt;
 
 reg  [23:0] tile0dt, tile1dt, tile0dt_r;
 reg  [13:0]	tilead;
+wire [2:0]  tile_phase = VFLP ? ~HPOS[2:0] : HPOS[2:0];
 always @(posedge VCLKx8) begin
 	if (VCLK_EN) begin
-		if (HPOS[2:0] == 3'b000) begin
+		if (tile_phase == 3'b000) begin
 			tilead <= tile0ad;
 			tile1dt <= tiledt;
 			tile0dt <= tile0dt_r;
 		end
-		if (HPOS[2:0] == 3'b100) begin
+		if (tile_phase == 3'b100) begin
 			tilead <= tile1ad;
 			tile0dt_r <= tiledt;
 		end
 	end
 end
 
+wire [8:0] BG0HP_FIX   = BG0HP;
+wire [8:0] BG0VP_FIX   = BG0VP;
+wire [2:0] BG0HP_PHASE = BG0HP[2:0];
+
 TileChrROM tilechr(VCLKx8, tilead, tiledt, ROMCL,ROMAD,ROMDT,ROMEN );
-BGGEN bg0(VCLKx8,VCLK_EN,BG0HP,BG0VP,vram0ad,vram0dt,tile0ad,tile0dt,BG0PX);
-BGGEN bg1(VCLKx8,VCLK_EN,BG1HP,BG1VP,vram1ad,vram1dt,tile1ad,tile1dt,BG1PX);
+BGGEN bg0(
+    .CLK(VCLKx8),
+    .VCLK_EN(VCLK_EN),
+    .VFLP(VFLP),
+    .FLIP_COL1_FIX(1'b0),
+    .HP(BG0HP_FIX),
+    .VP(BG0VP_FIX),
+    .HP_PHASE(BG0HP_PHASE),
+    .VRAMAD(vram0ad),
+    .VRAMDT(vram0dt),
+    .TILEAD(tile0ad),
+    .TILEDT(tile0dt),
+    .OPIX(BG0PX)
+);
+BGGEN bg1(
+    .CLK(VCLKx8),
+    .VCLK_EN(VCLK_EN),
+    .VFLP(VFLP),
+    .FLIP_COL1_FIX(1'b1),
+    .HP(BG1HP),
+    .VP(BG1VP),
+    .HP_PHASE(BG1HP[2:0]),
+    .VRAMAD(vram1ad),
+    .VRAMDT(vram1dt),
+    .TILEAD(tile1ad),
+    .TILEDT(tile1dt),
+    .OPIX(BG1PX)
+);
 
 
 // Color Mixer & RGB Output
@@ -154,6 +188,7 @@ COLMIX cmix(
 	VCLKx8, VCLK_EN,
 	BG0PX, BG1PX, SPRPX,
 	PALDSW, HPOS, VPOS,
+	VFLP,
 	cltidx, cltval,
 	mixcoll, mixcoll_ad,
 	palno, palout,
@@ -390,6 +425,7 @@ module VIDHVGEN
 (
 	input	 [8:0]	PH,
 	input	 [8:0]	PV,
+	input          VFLP,
 
 	input [15:0]	scrx,
 	input  [7:0]	scry,
@@ -407,17 +443,19 @@ module VIDHVGEN
 );
 	
 assign VBLK = (PV == 9'd224) & (PH <= 9'd64);
+wire [8:0] HPOS_RAW = PH + 9'd1;
+wire [8:0] VPOS_RAW = PV;
 
-assign HPOS = PH+1'd1;
-assign VPOS = PV;
+assign HPOS = VFLP ? (9'd255 - HPOS_RAW) : HPOS_RAW;
+assign VPOS = VFLP ? (9'd224 - VPOS_RAW) : VPOS_RAW;
 
 wire [7:0] BGHSCR = scrx[8:1]+4'd14;
 wire [7:0] BGVSCR = scry;
 
-assign BG0HP = (HPOS-BGHSCR)+8'd3;
+assign BG0HP = VFLP ? (HPOS - BGHSCR) - 8'd3 : (HPOS - BGHSCR) + 8'd3;
 assign BG0VP = (VPOS+BGVSCR);
 
-assign BG1HP = HPOS+8'd3;
+assign BG1HP = VFLP ? HPOS + 8'd4 : HPOS + 8'd3;
 assign BG1VP = VPOS;
 
 endmodule
@@ -490,9 +528,12 @@ module BGGEN
 (
 	input         CLK,
 	input         VCLK_EN,
+	input         VFLP,
+	input         FLIP_COL1_FIX,
 
 	input   [8:0]	HP,
 	input   [8:0]	VP,
+	input   [2:0]  HP_PHASE,
 
 	output  [9:0]	VRAMAD,
 	input	 [15:0]	VRAMDT,
@@ -503,6 +544,7 @@ module BGGEN
 	output [10:0]	OPIX
 );
 
+wire [2:0] BG_PHASE = VFLP ? ~HP_PHASE : HP_PHASE;
 assign VRAMAD = { VP[7:3], HP[7:3] };
 assign TILEAD = { VRAMDT[15], VRAMDT[10:0], VP[2:0] };
 
@@ -511,24 +553,34 @@ reg   [7:0] BG_COL, BG_COL1;
 wire [23:0] BGCD = BGREG[23:0];
 wire  [7:0] BGPN = BGREG[31:24];
 
-wire [31:0] BGPIX;
 always @( posedge CLK ) begin
 	if (VCLK_EN) begin
-		BGREG <= BGPIX;
-		if (HP[2:0] == 0) begin
-			BG_COL1 <= VRAMDT[12:5];
-			BG_COL <= BG_COL1;
+		if (BG_PHASE == 3'b000) begin
+			if (!VFLP) begin
+				BGREG   <= { BG_COL, TILEDT };
+				BG_COL1 <= VRAMDT[12:5];
+				BG_COL <= BG_COL1;
+			end
+			else begin
+				if (FLIP_COL1_FIX)
+					BGREG <= { BG_COL1, TILEDT };
+				else
+					BGREG <= { BG_COL, TILEDT };
+				BG_COL1 <= VRAMDT[12:5];
+				BG_COL  <= BG_COL1;
+			end
 		end
-	end
+		else begin
+			if (!VFLP)
+				BGREG <= { BGPN, BGCD[22:0], 1'b0 };
+			else
+				BGREG <= { BGPN, 1'b0, BGCD[23:1] };
+			end
+		end
 end
 
-dataselector1_32 pixsft(
-	BGPIX,
-	( HP[2:0] != 0 ),{ BGPN, BGCD[22:0], 1'b0 },
-						  { BG_COL/*VRAMDT[12:5]*/,   TILEDT }
-);
-
-assign OPIX = { BGPN, BGCD[7], BGCD[15], BGCD[23] }; 
+assign OPIX = !VFLP ? { BGPN, BGCD[7],  BGCD[15], BGCD[23] } :
+                      { BGPN, BGCD[0],  BGCD[8],  BGCD[16] }; 
 
 endmodule
 
@@ -548,6 +600,7 @@ module COLMIX
 	input				PALDSW,
 	input   [8:0]	HPOS,
 	input	  [8:0]	VPOS,
+	input          VFLP,
 
 	output  [7:0]	cltidx,
 	input   [7:0]	cltval,
@@ -582,7 +635,7 @@ wire [10:0] palno_d = {HPOS[7],VPOS[7:2],HPOS[6:3]};
 
 assign palno = PALDSW ? palno_d : palno_i;
 
-always @(posedge CLK ) if (VCLK_EN) RGB8 <= palout;
+always @(posedge CLK) if (VCLK_EN) RGB8 <= (VFLP & (HPOS == -9'd6)) ? 8'h00 : palout;
 
 endmodule
 
