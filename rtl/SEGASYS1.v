@@ -17,6 +17,7 @@ module SEGASYSTEM1
 	
 	input   [8:0]  PH,         // PIXEL H
 	input   [8:0]  PV,         // PIXEL V
+	input          VFLP,
 	output        PCLK_EN,
 	output  [7:0]	POUT, 	   // PIXEL OUT
 
@@ -73,7 +74,7 @@ SEGASYS1_MAIN Main (
 wire [7:0] OPIX;
 SEGASYS1_VIDEO Video (
 	.RESET(reset),.VCLKx8(clk48M),
-	.PH(PH),.PV(PV),.VFLP(VIDMD[7]),
+	.PH(PH),.PV(PV),.VFLP(VIDMD[7] ^ VFLP),
 	.VBLK(VBLK),.PCLK_EN(PCLK_EN),.RGB8(OPIX),.PALDSW(1'b0),
 
 	.cpu_ad(CPUAD),.cpu_wr(CPUWR),.cpu_dw(CPUDO),
